@@ -1,103 +1,110 @@
-import Image from "next/image";
+import clsx from "clsx";
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 className="text-[22px] font-semibold text-[color:var(--color-heading)] mb-4">
+      {children}
+    </h2>
+  );
+}
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const progress = 0.34; // placeholder, will be dynamic
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const dialStates: Array<"empty" | "partial" | "full"> = [
+    "partial",
+    "empty",
+    "partial",
+    "empty",
+    "full",
+    "full",
+    "empty",
+    "full",
+    "partial",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "partial",
+    "full",
+  ];
+
+  const labels = [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "A5",
+    "B1",
+    "B2",
+    "B3",
+    "B4",
+    "B5",
+    "B6",
+    "B7",
+    "C1",
+    "C2",
+    "C3",
+    "D1",
+    "D2",
+    "D3",
+  ];
+
+  return (
+    <div className="max-w-[1160px]">
+      <h1 className={clsx("display-title", "text-[72px] font-extrabold mb-10")}>DASHBOARD</h1>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        {/* Left column */}
+        <div className="space-y-12">
+          <div>
+            <SectionTitle>QWE Progress Bar</SectionTitle>
+            <div className="pill-track h-[64px] w-full max-w-[520px] flex items-center p-2">
+              <div
+                className="pill-fill h-full"
+                style={{ width: `${Math.max(6, progress * 100)}%` }}
+              />
+            </div>
+          </div>
+
+          <div>
+            <SectionTitle>Total Placements</SectionTitle>
+            <div className="card p-6 flex items-center gap-8">
+              <div className="w-40 h-24 rounded-b-full bg-[color:var(--color-heading)] relative overflow-hidden">
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-3 h-20 bg-[color:var(--progress-red)] rotate-[-40deg] rounded-full" />
+              </div>
+              <div className="text-lg text-[color:var(--color-heading)] font-semibold">
+                3 out of a maximum 4
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Right column */}
+        <div>
+          <SectionTitle>Competency Dials</SectionTitle>
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-8 w-full max-w-[420px]">
+            {dialStates.map((state, idx) => (
+              <div key={idx} className="flex items-center justify-center flex-col gap-2">
+                <div
+                  className={clsx(
+                    "dial-ring w-16 h-16",
+                    state === "empty" && "dial-empty",
+                    state === "partial" && "dial-partial",
+                    state === "full" && "dial-full"
+                  )}
+                />
+                <span className="text-sm font-semibold text-[color:var(--color-heading)]">
+                  {labels[idx]}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

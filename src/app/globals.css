@@ -1,26 +1,77 @@
 @import "tailwindcss";
 
+/* Design tokens */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --brand-teal: #23b999; /* Primary brand colour */
+  --heading-navy: #1c2640; /* Dark navy used for large headings */
+  --text-body: #233044; /* Body text */
+  --muted: #e9edf1; /* Pale grey cards */
+  --muted-2: #f4f6f8;
+  --progress-red: #ea6b6f; /* Progress pill fill */
+  --progress-gray: #d9dbe1; /* Progress pill track */
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-brand: var(--brand-teal);
+  --color-heading: var(--heading-navy);
+  --color-text: var(--text-body);
+  --color-muted: var(--muted);
+  --color-muted-2: var(--muted-2);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility classes specific to this project */
+.display-title {
+  color: var(--color-heading);
+  letter-spacing: -0.02em;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.pill-track {
+  background: var(--progress-gray);
+  border-radius: 9999px;
+}
+
+.pill-fill {
+  background: var(--progress-red);
+  border-radius: 9999px;
+}
+
+.sidebar {
+  width: 88px;
+  background: var(--brand-teal);
+}
+
+.dial-empty {
+  background: conic-gradient(#d1d5db 0 360deg);
+}
+
+.dial-partial {
+  background: conic-gradient(var(--progress-red) 270deg, #e5e7eb 0);
+}
+
+.dial-full {
+  background: conic-gradient(#1e78ff 360deg, #1e78ff 0);
+}
+
+.dial-ring {
+  border-radius: 9999px;
+  padding: 6px;
+  background: #fff;
 }
