@@ -1,105 +1,134 @@
+"use client";
+
 import clsx from "clsx";
+import { useEffect, useMemo, useState } from "react";
+import { load, computeTotalMonths, competencyCounts, placementsCount } from "@/lib/store";
+import { ALL_LOW, LowLevelCompetency } from "@/lib/types";
+import { Dial } from "@/components/Dial";
+import { Gauge } from "@/components/Gauge";
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="text-[22px] font-semibold text-[color:var(--color-heading)] mb-4">
-      {children}
-    </h2>
+    <h2 className="text-[22px] font-semibold text-[color:var(--color-heading)] mb-4">{children}</h2>
   );
 }
 
 export default function Home() {
-  const progress = 0.34; // placeholder, will be dynamic
+  const [mounted, setMounted] = useState(false);
+  const [periods, setPeriods] = useState(() => [] as any[]);
 
-  const dialStates: Array<"empty" | "partial" | "full"> = [
-    "partial",
-    "empty",
-    "partial",
-    "empty",
-    "full",
-    "full",
-    "empty",
-    "full",
-    "partial",
-    "empty",
-    "empty",
-    "empty",
-    "empty",
-    "empty",
-    "empty",
-    "empty",
-    "partial",
-    "full",
-  ];
+  useEffect(() => {
+    setMounted(true);
+    setPeriods(load().periods);
+  }, []);
 
-  const labels = [
-    "A1",
-    "A2",
-    "A3",
-    "A4",
-    "A5",
-    "B1",
-    "B2",
-    "B3",
-    "B4",
-    "B5",
-    "B6",
-    "B7",
-    "C1",
-    "C2",
-    "C3",
-    "D1",
-    "D2",
-    "D3",
-  ];
+  const resetData = () => {
+    localStorage.removeItem("qwe-data-v1");
+    window.location.reload();
+  };
+
+  const months = useMemo(() => (mounted ? computeTotalMonths(periods) : 0), [mounted, periods]);
+  const counts = useMemo(() => {
+    if (!mounted) {
+      return Object.fromEntries(ALL_LOW.map((k) => [k, 0])) as Record<LowLevelCompetency, number>;
+    }
+    return competencyCounts(periods);
+  }, [mounted, periods]);
+  const placements = useMemo(() => (mounted ? placementsCount(periods) : 0), [mounted, periods]);
+  const progress = Math.min(1, months / 24);
 
   return (
-    <div className="max-w-[1160px]">
-      <h1 className={clsx("display-title", "text-[72px] font-extrabold mb-10")}>DASHBOARD</h1>
+    <div className="mx-auto w-full max-w-[1440px]">
+      <div className="flex justify-between items-center mb-6 sm:mb-8">
+        <h1 className={clsx("display-title", "text-[clamp(40px,8vw,90px)] leading-[0.95] font-extrabold")}>DASHBOARD</h1>
+        <button 
+          onClick={resetData}
+          className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+        >
+          Reset Test Data
+        </button>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 sm:gap-x-24 gap-y-12 sm:gap-y-16 items-start">
         {/* Left column */}
-        <div className="space-y-12">
-          <div>
+        <div className="space-y-14">
+          <div className="min-w-[min(520px,100%)]">
             <SectionTitle>QWE Progress Bar</SectionTitle>
-            <div className="pill-track h-[64px] w-full max-w-[520px] flex items-center p-2">
-              <div
-                className="pill-fill h-full"
-                style={{ width: `${Math.max(6, progress * 100)}%` }}
-              />
+            <div>
+              <div className="text-[clamp(20px,4vw,32px)] font-extrabold text-[color:var(--color-heading)] mb-4">{months} out of 24 months</div>
+              <div className="pill-track h-[48px] sm:h-[70px] w-full max-w-[720px] flex items-center p-2 sm:p-3">
+                <div className="pill-fill h-full" style={{ width: months > 0 ? `${Math.min(100, progress * 100)}%` : 0 }} />
+              </div>
             </div>
           </div>
 
-          <div>
+          <div className="col-span-1 mt-16 sm:mt-24">
             <SectionTitle>Total Placements</SectionTitle>
-            <div className="card p-6 flex items-center gap-8">
-              <div className="w-40 h-24 rounded-b-full bg-[color:var(--color-heading)] relative overflow-hidden">
-                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-3 h-20 bg-[color:var(--progress-red)] rotate-[-40deg] rounded-full" />
+            <div className="text-[clamp(20px,4vw,32px)] font-extrabold text-[color:var(--color-heading)] mb-4">{placements} out of 4 placements</div>
+            <div className="space-y-6">
+              {/* Option 3: Milestone-based Design */}
+              <div className="max-w-[720px]">
+                {/* Progress steps */}
+                <div className="flex items-center justify-between">
+                  {[1, 2, 3, 4].map((step) => (
+                    <div key={step} className="flex flex-col items-center">
+                      <div 
+                        className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 ${
+                          step <= placements 
+                            ? 'bg-gradient-to-br from-teal-400 to-purple-500 text-white' 
+                            : 'bg-gray-200 text-gray-400'
+                        }`}
+                      >
+                        {step <= placements ? (
+                          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        ) : (
+                          <span className="text-lg font-semibold">{step}</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Progress line */}
+                <div className="relative mt-4">
+                  <div className="h-1 bg-gray-200 rounded-full">
+                    <div 
+                      className="h-1 bg-gradient-to-r from-teal-400 to-purple-500 rounded-full transition-all duration-300"
+                      style={{ width: `${(placements / 4) * 100}%` }}
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="text-lg text-[color:var(--color-heading)] font-semibold">
-                3 out of a maximum 4
+              
+              {/* Modern info card */}
+              <div className="card p-6 max-w-[720px]">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-[color:var(--color-heading)] mb-2">Placement Information</h3>
+                    <p className="text-[color:var(--foreground)] leading-relaxed">
+                      All of your LOD assignments count as 1 placement. You need to complete 4 placements to meet the QWE requirements.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Right column */}
-        <div>
+        <div className="min-w-[min(520px,100%)] sm:justify-self-end self-start">
           <SectionTitle>Competency Dials</SectionTitle>
-          <div className="grid grid-cols-3 sm:grid-cols-4 gap-8 w-full max-w-[420px]">
-            {dialStates.map((state, idx) => (
-              <div key={idx} className="flex items-center justify-center flex-col gap-2">
-                <div
-                  className={clsx(
-                    "dial-ring w-16 h-16",
-                    state === "empty" && "dial-empty",
-                    state === "partial" && "dial-partial",
-                    state === "full" && "dial-full"
-                  )}
-                />
-                <span className="text-sm font-semibold text-[color:var(--color-heading)]">
-                  {labels[idx]}
-                </span>
+          <div className="dial-grid grid grid-cols-2 sm:grid-cols-3 gap-x-4 sm:gap-x-6 gap-y-4 sm:gap-y-5 w-full max-w-[520px]">
+            {ALL_LOW.map((k) => (
+              <div key={k} className="dial-chip">
+                <Dial label={k} count={counts[k]} />
               </div>
             ))}
           </div>
