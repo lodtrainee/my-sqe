@@ -39,11 +39,14 @@ export function Dial({ label, count }: Props) {
   const overlayRingScale = 1.35;
   const overlayInnerPaddingPx = Math.round(baseInnerPaddingPx * overlayRingScale);
 
-  // Calculate progress percentage
+  // Calculate progress percentage based on competencies (0-6)
   let progressPercent = 0;
-  if (count >= 3) progressPercent = 100;
-  else if (count === 2) progressPercent = 83.33;
-  else if (count === 1) progressPercent = 66.67;
+  if (count === 1) progressPercent = 33.33; // 2pm (120°)
+  else if (count === 2) progressPercent = 50; // 4pm (180°)
+  else if (count === 3) progressPercent = 66.67; // 6pm (240°)
+  else if (count === 4) progressPercent = 83.33; // 8pm (300°)
+  else if (count === 5) progressPercent = 91.67; // 10pm (330°)
+  else if (count >= 6) progressPercent = 100; // 12pm (360°)
 
   // Calculate the angle for the conic gradient
   const progressAngle = (progressPercent / 100) * 360;
@@ -72,11 +75,11 @@ export function Dial({ label, count }: Props) {
             <div 
               className="absolute inset-0 rounded-full"
               style={{ 
-                background: count >= 3 
-                  ? `conic-gradient(from 0deg, var(--brand-teal) 0deg, var(--accent-purple) ${progressAngle}deg, transparent ${progressAngle}deg, transparent 360deg)`
+                background: count >= 6 
+                  ? `conic-gradient(from 0deg, var(--brand-teal) 0deg, #1ABF9B 60deg, #1ABF9B 120deg, var(--accent-blue) 180deg, var(--accent-purple) 240deg, var(--brand-teal) 360deg)`
                   : `conic-gradient(from 0deg, var(--brand-red) 0deg, var(--accent-pink) ${progressAngle}deg, transparent ${progressAngle}deg, transparent 360deg)`,
                 padding: "8px",
-                filter: count >= 3 
+                filter: count >= 6 
                   ? "drop-shadow(0 0 15px rgba(18, 199, 179, 0.5))"
                   : "drop-shadow(0 0 15px rgba(234, 107, 111, 0.5))"
               }}
@@ -137,11 +140,11 @@ export function Dial({ label, count }: Props) {
               <div 
                 className="absolute inset-0 rounded-full"
                 style={{ 
-                  background: count >= 3 
-                    ? `conic-gradient(from 0deg, var(--brand-teal) 0deg, var(--accent-purple) ${progressAngle}deg, transparent ${progressAngle}deg, transparent 360deg)`
+                  background: count >= 6 
+                    ? `conic-gradient(from 0deg, var(--brand-teal) 0deg, #1ABF9B 60deg, #1ABF9B 120deg, var(--accent-blue) 180deg, var(--accent-purple) 240deg, var(--brand-teal) 360deg)`
                     : `conic-gradient(from 0deg, var(--brand-red) 0deg, var(--accent-pink) ${progressAngle}deg, transparent ${progressAngle}deg, transparent 360deg)`,
                   padding: "12px",
-                  filter: count >= 3 
+                  filter: count >= 6 
                     ? "drop-shadow(0 0 25px rgba(18, 199, 179, 0.7))"
                     : "drop-shadow(0 0 25px rgba(234, 107, 111, 0.7))"
                 }}

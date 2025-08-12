@@ -22,10 +22,7 @@ export default function Home() {
     setPeriods(load().periods);
   }, []);
 
-  const resetData = () => {
-    localStorage.removeItem("qwe-data-v1");
-    window.location.reload();
-  };
+
 
   const months = useMemo(() => (mounted ? computeTotalMonths(periods) : 0), [mounted, periods]);
   const counts = useMemo(() => {
@@ -39,15 +36,7 @@ export default function Home() {
 
   return (
     <div className="mx-auto w-full max-w-[1440px]">
-      <div className="flex justify-between items-center mb-6 sm:mb-8">
-        <h1 className={clsx("display-title", "text-[clamp(40px,8vw,90px)] leading-[0.95] font-extrabold")}>DASHBOARD</h1>
-        <button 
-          onClick={resetData}
-          className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-        >
-          Reset Test Data
-        </button>
-      </div>
+      <h1 className={clsx("display-title", "text-[clamp(40px,8vw,90px)] leading-[0.95] font-extrabold mb-6 sm:mb-8")}>DASHBOARD</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 sm:gap-x-24 gap-y-12 sm:gap-y-16 items-start">
         {/* Left column */}
