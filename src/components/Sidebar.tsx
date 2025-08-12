@@ -25,9 +25,29 @@ export function Sidebar() {
           {items.map((it) => {
             const active = pathname === it.href;
             return (
-              <Link key={it.href} href={it.href} className={`grid place-items-center w-12 h-12 rounded-xl clickable ${active ? "bg-white/30" : "bg-white/10 hover:bg-white/20"}`}>
+              <Link 
+                key={it.href} 
+                href={it.href} 
+                className={`group relative grid place-items-center w-12 h-12 rounded-xl clickable transition-all duration-300 ease-out transform hover:scale-110 hover:shadow-lg hover:shadow-white/20 ${
+                  active 
+                    ? "bg-white/30 shadow-lg shadow-white/20 scale-105" 
+                    : "bg-white/10 hover:bg-white/20 hover:shadow-md hover:shadow-white/15"
+                }`}
+              >
                 <span className="sr-only">{it.label}</span>
-                <Image src={it.icon} alt="" width={28} height={28} />
+                <Image 
+                  src={it.icon} 
+                  alt="" 
+                  width={28} 
+                  height={28} 
+                  className={`transition-all duration-300 ${active ? "filter brightness-110" : "group-hover:filter group-hover:brightness-110"}`}
+                />
+                {/* Subtle glow effect on hover */}
+                <div className={`absolute inset-0 rounded-xl transition-all duration-300 ${
+                  active 
+                    ? "bg-gradient-to-br from-white/20 to-transparent" 
+                    : "group-hover:bg-gradient-to-br group-hover:from-white/10 group-hover:to-transparent"
+                }`} />
               </Link>
             );
           })}
@@ -41,9 +61,28 @@ export function Sidebar() {
             const active = pathname === it.href;
             return (
               <li key={it.href}>
-                <Link href={it.href} className={`grid place-items-center w-12 h-12 rounded-xl clickable ${active ? "bg-white/30" : "bg-white/10"}`}>
+                <Link 
+                  href={it.href} 
+                  className={`group relative grid place-items-center w-12 h-12 rounded-xl clickable transition-all duration-300 ease-out transform hover:scale-110 hover:shadow-lg hover:shadow-white/20 ${
+                    active 
+                      ? "bg-white/30 shadow-lg shadow-white/20 scale-105" 
+                      : "bg-white/10 hover:bg-white/20 hover:shadow-md hover:shadow-white/15"
+                  }`}
+                >
                   <span className="sr-only">{it.label}</span>
-                  <Image src={it.icon} alt="" width={24} height={24} />
+                  <Image 
+                    src={it.icon} 
+                    alt="" 
+                    width={24} 
+                    height={24} 
+                    className={`transition-all duration-300 ${active ? "filter brightness-110" : "group-hover:filter group-hover:brightness-110"}`}
+                  />
+                  {/* Subtle glow effect on hover */}
+                  <div className={`absolute inset-0 rounded-xl transition-all duration-300 ${
+                    active 
+                      ? "bg-gradient-to-br from-white/20 to-transparent" 
+                      : "group-hover:bg-gradient-to-br group-hover:from-white/10 group-hover:to-transparent"
+                  }`} />
                 </Link>
               </li>
             );

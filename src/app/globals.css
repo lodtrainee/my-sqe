@@ -1,20 +1,59 @@
 @import "tailwindcss";
 
 :root {
+  /* Core Colors */
   --background: #ffffff;
   --foreground: #1c2640;
   --color-heading: #1c2640;
+  
+  /* Brand Colors */
   --brand-teal: #12c7b3;
   --brand-red: #ea6b6f;
+  
+  /* Neutral Colors */
   --muted: #f8fafc;
   --ring-muted: #e2e8f0;
   --card: #ffffff;
   --card-border: #e2e8f0;
+  
+  /* Accent Colors */
   --accent-purple: #8b5cf6;
   --accent-pink: #ec4899;
   --accent-blue: #3b82f6;
   --accent-yellow: #FED55B;
   --warm-grey: #95928F;
+  
+  /* Design Tokens */
+  --border-radius-sm: 8px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 16px;
+  --border-radius-xl: 20px;
+  --border-radius-2xl: 24px;
+  --border-radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.16);
+  
+  /* Brand Shadows */
+  --shadow-teal: 0 4px 16px rgba(18, 199, 179, 0.25);
+  --shadow-blue: 0 4px 16px rgba(59, 130, 246, 0.25);
+  --shadow-purple: 0 4px 16px rgba(139, 92, 246, 0.25);
+  
+  /* Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Spacing */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
 }
 
 @theme inline {
@@ -36,15 +75,60 @@ body {
 /* Layout */
 .sidebar {
   background: linear-gradient(135deg, var(--brand-teal) 0%, var(--accent-purple) 100%);
-  box-shadow: 0 8px 32px rgba(18, 199, 179, 0.15);
+  box-shadow: var(--shadow-lg);
+  transition: var(--transition-normal);
 }
 
 .clickable {
-  transition: transform 120ms ease, opacity 120ms ease, background-color 120ms ease, box-shadow 120ms ease;
+  transition: var(--transition-fast);
+  will-change: transform, opacity, background-color, box-shadow;
 }
 .clickable:active {
   transform: scale(0.98);
 }
+
+/* Smooth page transitions */
+.page-transition {
+  transition: var(--transition-normal);
+}
+
+/* Fade in animation for content */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Stagger animation for dials */
+.dial-stagger {
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: both;
+}
+
+.dial-stagger:nth-child(1) { animation-delay: 0.1s; }
+.dial-stagger:nth-child(2) { animation-delay: 0.15s; }
+.dial-stagger:nth-child(3) { animation-delay: 0.2s; }
+.dial-stagger:nth-child(4) { animation-delay: 0.25s; }
+.dial-stagger:nth-child(5) { animation-delay: 0.3s; }
+.dial-stagger:nth-child(6) { animation-delay: 0.35s; }
+.dial-stagger:nth-child(7) { animation-delay: 0.4s; }
+.dial-stagger:nth-child(8) { animation-delay: 0.45s; }
+.dial-stagger:nth-child(9) { animation-delay: 0.5s; }
+.dial-stagger:nth-child(10) { animation-delay: 0.55s; }
+.dial-stagger:nth-child(11) { animation-delay: 0.6s; }
+.dial-stagger:nth-child(12) { animation-delay: 0.65s; }
+.dial-stagger:nth-child(13) { animation-delay: 0.7s; }
+.dial-stagger:nth-child(14) { animation-delay: 0.75s; }
+.dial-stagger:nth-child(15) { animation-delay: 0.8s; }
 
 /* Typography */
 .display-title {
@@ -58,25 +142,25 @@ body {
 .card {
   background: var(--card);
   border: 1px solid var(--card-border);
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
   backdrop-filter: blur(10px);
 }
 .btn {
-  border-radius: 12px;
+  border-radius: var(--border-radius-md);
   padding: 12px 18px;
   font-weight: 600;
-  transition: all 200ms ease;
+  transition: var(--transition-fast);
   border: none;
 }
 .btn-primary {
   background: linear-gradient(135deg, var(--brand-teal) 0%, var(--accent-purple) 100%);
   color: white;
-  box-shadow: 0 4px 16px rgba(18, 199, 179, 0.25);
+  box-shadow: var(--shadow-teal);
 }
 .btn-primary:hover { 
   opacity: 0.95; 
-  box-shadow: 0 6px 24px rgba(18, 199, 179, 0.35);
+  box-shadow: var(--shadow-lg);
   transform: translateY(-1px);
 }
 .btn-black {
@@ -94,11 +178,12 @@ body {
 /* Progress pill */
 .pill-track {
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  border-radius: 9999px;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.05);
+  border-radius: var(--border-radius-full);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.08), var(--shadow-sm);
   border: 1px solid rgba(255, 255, 255, 0.8);
   position: relative;
   overflow: hidden;
+  transition: var(--transition-normal);
 }
 
 .pill-track::before {
@@ -116,11 +201,11 @@ body {
 .pill-fill {
   background: linear-gradient(90deg, var(--brand-teal) 0%, var(--accent-blue) 50%, var(--accent-pink) 100%);
   background-size: 200% 100%;
-  border-radius: 9999px;
+  border-radius: var(--border-radius-full);
   box-shadow: 0 2px 12px rgba(26, 191, 155, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.3);
   position: relative;
   animation: gradientShift 4s ease infinite;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--transition-slow);
 }
 
 .pill-fill::before {
@@ -131,20 +216,43 @@ body {
   right: 0;
   bottom: 0;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
-  border-radius: 9999px;
+  border-radius: var(--border-radius-full);
   pointer-events: none;
 }
 
 /* Dial visuals */
 .dial-ring {
-  border-radius: 9999px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius-full);
+  box-shadow: var(--shadow-sm);
   background: linear-gradient(135deg, #ffffff 0%, var(--muted) 100%);
   border: 1px solid var(--card-border);
 }
 
 /* Neighbor dimming in dial grid */
-.dial-grid .dial-chip { transition: opacity 380ms cubic-bezier(.22,.61,.36,1); will-change: opacity; }
+.dial-grid .dial-chip { 
+  transition: var(--transition-normal); 
+  will-change: opacity, transform; 
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: both;
+}
+
+/* Stagger animation delays for dials */
+.dial-grid .dial-chip:nth-child(1) { animation-delay: 0.1s; }
+.dial-grid .dial-chip:nth-child(2) { animation-delay: 0.15s; }
+.dial-grid .dial-chip:nth-child(3) { animation-delay: 0.2s; }
+.dial-grid .dial-chip:nth-child(4) { animation-delay: 0.25s; }
+.dial-grid .dial-chip:nth-child(5) { animation-delay: 0.3s; }
+.dial-grid .dial-chip:nth-child(6) { animation-delay: 0.35s; }
+.dial-grid .dial-chip:nth-child(7) { animation-delay: 0.4s; }
+.dial-grid .dial-chip:nth-child(8) { animation-delay: 0.45s; }
+.dial-grid .dial-chip:nth-child(9) { animation-delay: 0.5s; }
+.dial-grid .dial-chip:nth-child(10) { animation-delay: 0.55s; }
+.dial-grid .dial-chip:nth-child(11) { animation-delay: 0.6s; }
+.dial-grid .dial-chip:nth-child(12) { animation-delay: 0.65s; }
+.dial-grid .dial-chip:nth-child(13) { animation-delay: 0.7s; }
+.dial-grid .dial-chip:nth-child(14) { animation-delay: 0.75s; }
+.dial-grid .dial-chip:nth-child(15) { animation-delay: 0.8s; }
+
 /* Dim only when an actual chip is hovered or focused */
 .dial-grid:has(.dial-chip:is(:hover, :focus-within)) .dial-chip { opacity: 0.65; }
 .dial-grid:has(.dial-chip:is(:hover, :focus-within)) .dial-chip:is(:hover, :focus-within) { opacity: 1; }
