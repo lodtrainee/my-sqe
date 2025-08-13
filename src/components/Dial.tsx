@@ -56,7 +56,7 @@ export function Dial({ label, count }: Props) {
       <button
         type="button"
         aria-label={hoverTitle ? `${label}: ${hoverTitle}` : label}
-        className="relative group outline-none rounded-full hover:z-10 focus:z-10"
+        className="relative group outline-none rounded-full hover:z-20 focus:z-20"
         style={{ width: size, height: size }}
       >
         {/* Progress ring with conic gradient */}
@@ -123,7 +123,7 @@ export function Dial({ label, count }: Props) {
         {/* Enhanced hover overlay */}
         <div
           aria-hidden
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 group-focus:opacity-100 pointer-events-none transition-all duration-300 z-10 rounded-full overflow-hidden shadow-2xl shadow-gray-400/40"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 group-focus:opacity-100 pointer-events-none transition-all duration-300 z-50 rounded-full overflow-hidden shadow-2xl shadow-gray-400/40"
           style={{ 
             width: `${overlayScale * 100}%`, 
             height: `${overlayScale * 100}%`

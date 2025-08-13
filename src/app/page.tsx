@@ -6,6 +6,7 @@ import { load, computeTotalMonths, competencyCounts, placementsCount } from "@/l
 import { ALL_LOW, LowLevelCompetency } from "@/lib/types";
 import { Dial } from "@/components/Dial";
 import { Gauge } from "@/components/Gauge";
+import { calculateConsistencyStreak, calculateQuarterlyStats, getConsistencyMessage, getConsistencyEmoji } from "@/lib/consistency";
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
@@ -16,10 +17,13 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [periods, setPeriods] = useState(() => [] as any[]);
+  const [data, setData] = useState(() => null as any);
 
   useEffect(() => {
     setMounted(true);
-    setPeriods(load().periods);
+    const loadedData = load();
+    setPeriods(loadedData.periods);
+    setData(loadedData);
   }, []);
 
 
@@ -33,14 +37,86 @@ export default function Home() {
   }, [mounted, periods]);
   const placements = useMemo(() => (mounted ? placementsCount(periods) : 0), [mounted, periods]);
   const progress = Math.min(1, months / 24);
+  
+  const consistencyStats = useMemo(() => {
+    if (!mounted || !data) {
+      return { currentStreak: 0, longestStreak: 0, totalWeeks: 0, lastReflectionDate: null };
+    }
+    return calculateConsistencyStreak(data);
+  }, [mounted, data]);
+
+  const quarterlyStats = useMemo(() => {
+    if (!mounted || !data) {
+      return { currentQuarterWeeks: 0, previousQuarterWeeks: 0, currentQuarterName: '', previousQuarterName: '' };
+    }
+    return calculateQuarterlyStats(data);
+  }, [mounted, data]);
 
   return (
     <div className="mx-auto w-full max-w-[1440px] px-6 sm:px-8 page-transition">
-      <h1 className={clsx("display-title", "text-[clamp(40px,8vw,90px)] leading-[0.95] font-extrabold mb-8 sm:mb-12 tracking-tight fade-in-up")}>DASHBOARD</h1>
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
+        <h1 className={clsx("display-title", "text-[clamp(40px,8vw,90px)] leading-[0.95] font-extrabold tracking-tight fade-in-up")}>DASHBOARD</h1>
+        
+        {/* Battery-style Consistency Tracker */}
+        <div className="flex items-center gap-2 fade-in-up group relative" style={{ animationDelay: '0.2s' }}>
+          {/* Previous Quarter - Slick Badge */}
+          <div className="px-2 py-1 bg-gray-100 rounded-full border border-gray-200">
+            <div className="text-xs font-medium text-gray-600">Last quarter: {quarterlyStats.previousQuarterWeeks}w</div>
+          </div>
+          
+          {/* Current Quarter Battery */}
+          <div className="flex items-center gap-2">
+            <div className="text-sm font-medium text-[color:var(--foreground)]">
+              {quarterlyStats.currentQuarterWeeks}w
+            </div>
+            <div className="pill-track h-6 w-72 flex items-center p-1 relative overflow-hidden">
+              <div 
+                className="pill-fill h-full transition-all duration-700 ease-out rounded-full shadow-lg relative" 
+                style={{ 
+                  width: `${Math.min((quarterlyStats.currentQuarterWeeks / 12) * 100, 100)}%`,
+                  background: 'linear-gradient(90deg, #2dd4bf 0%, #1ABF9B 30%, #14b8a6 70%, #0d9488 100%)',
+                  boxShadow: '0 4px 12px rgba(26, 191, 155, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.2)'
+                }} 
+              >
+                {/* Primary shine effect */}
+                <div 
+                  className="absolute inset-0 rounded-full opacity-40"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 40%, transparent 70%)',
+                    transform: 'translateX(-15%)'
+                  }}
+                />
+                {/* Secondary highlight */}
+                <div 
+                  className="absolute inset-0 rounded-full opacity-20"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 30%)',
+                    transform: 'translateX(10%) translateY(-10%)'
+                  }}
+                />
+                {/* Bottom shadow for depth */}
+                <div 
+                  className="absolute inset-0 rounded-full opacity-25"
+                  style={{
+                    background: 'linear-gradient(135deg, transparent 0%, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0.2) 100%)',
+                    transform: 'translateX(5%) translateY(5%)'
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+          
+          {/* Tooltip */}
+          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-50 border border-gray-200 text-[#252E4B] text-xs font-semibold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-10 shadow-lg">
+            Consistency is key! This shows how many reflections you've added this quarter.
+            <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-50"></div>
+          </div>
+        </div>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 sm:gap-x-28 gap-y-16 sm:gap-y-20 items-start">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 sm:gap-x-28 gap-y-8 sm:gap-y-12 items-start">
         {/* Left column */}
-        <div className="space-y-16 sm:space-y-20">
+        <div className="space-y-8 sm:space-y-12">
           <div className="min-w-[min(520px,100%)] fade-in-up" style={{ animationDelay: '0.2s' }}>
             <SectionTitle>QWE Progress Bar</SectionTitle>
             <div>
@@ -62,9 +138,9 @@ export default function Home() {
                    </div>
                   
                   {/* Tooltip */}
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-10">
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-50 border border-gray-200 text-[#252E4B] text-xs font-semibold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-10 shadow-lg">
                     Maximum organisations exceeded
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-50"></div>
                   </div>
                 </div>
               )}
@@ -142,14 +218,51 @@ export default function Home() {
         </div>
 
         {/* Right column */}
-        <div className="min-w-[min(520px,100%)] sm:justify-self-end self-start fade-in-up" style={{ animationDelay: '0.6s' }}>
-          <SectionTitle>Competency Dials</SectionTitle>
-          <div className="dial-grid grid grid-cols-2 sm:grid-cols-3 gap-x-6 sm:gap-x-8 gap-y-6 sm:gap-y-8 w-full max-w-[520px]">
-            {ALL_LOW.map((k) => (
-              <div key={k} className="dial-chip">
-                <Dial label={k} count={counts[k]} />
+        <div className="space-y-8 sm:space-y-12">
+          <div className="min-w-[min(520px,100%)] fade-in-up" style={{ animationDelay: '0.6s' }}>
+            <SectionTitle>Competency Dials</SectionTitle>
+            <div className="text-[clamp(20px,4vw,32px)] font-extrabold text-[color:var(--color-heading)] mb-4 tracking-tight">
+              {Object.values(counts).filter(count => count >= 6).length} out of 2 competencies
+            </div>
+            {/* Competency Information Card */}
+            <div className="p-6 w-full rounded-2xl bg-white border border-gray-200 shadow-md backdrop-blur-sm transition-all duration-300 hover:shadow-lg transform hover:scale-[1.02] mb-6"
+                 style={{ 
+                   animation: 'fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both',
+                   animationDelay: '0.8s'
+                 }}>
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-pink-50 via-pink-25 to-white shadow-inner flex items-center justify-center">
+                  <svg className="w-5 h-5" style={{ color: '#252E4B' }} fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold text-[color:var(--color-heading)] mb-2 tracking-tight">Competency Guidance</h3>
+                  <p className="text-[color:var(--foreground)] leading-relaxed text-sm">
+                    The SRA doesn't set a minimum number of times you must apply a competency. In theory, 2 strong examples in different contexts may be enough. In this tracker, the dial fills at 6 to promote repetition, variety and depth of experience. A full dial doesn't guarantee competence and an unfilled one doesn't mean it's undeveloped. Quality and supervisor judgment matter most.
+                  </p>
+                </div>
               </div>
-            ))}
+            </div>
+            <div className="grid grid-cols-6 gap-2 sm:gap-3 relative mt-8">
+              {ALL_LOW.map((competency, index) => (
+                <div
+                  key={competency}
+                  className="relative hover:z-50"
+                  style={{
+                    animationDelay: `${index * 0.05}s`,
+                    animation: 'fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both'
+                  }}
+                >
+                  <Dial
+                    label={competency}
+                    count={counts[competency]}
+                  />
+                </div>
+              ))}
+            </div>
+            
+
           </div>
         </div>
       </div>

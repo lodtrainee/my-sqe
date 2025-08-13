@@ -17,8 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} antialiased`}
-      >
+      <body className={`${inter.variable} antialiased`}>
         <div className="flex min-h-screen pb-16 sm:pb-0">
           <Sidebar />
           {/* Main content */}
