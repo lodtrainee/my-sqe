@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { addReflection, addPeriod, updateReflection, load, deleteReflection, deletePeriod, AppData } from "@/lib/store";
+import { addReflection, addPeriod, updateReflection, load, deleteReflection, deletePeriod, AppData, placementsCount } from "@/lib/store";
 import { HighLevelArea, LowLevelCompetency, HIGH_TO_LOW, COMPETENCY_DESCRIPTIONS, LOW_LEVEL_DESCRIPTIONS } from "@/lib/types";
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
@@ -490,6 +490,28 @@ export default function PeriodsPage() {
           >
             {editing ? "Update Period" : "Save Period"}
           </button>
+        </div>
+      )}
+
+      {/* Warning when exceeding 4 organisations */}
+      {placementsCount(data.periods) > 4 && (
+        <div className="mb-6 p-6 bg-gradient-to-r from-blue-50/50 to-teal-50/50 border border-blue-100/60 rounded-2xl backdrop-blur-sm shadow-sm">
+          <div className="flex items-start gap-5">
+            <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-blue-400/20 to-teal-400/20 flex items-center justify-center">
+              <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div>
+              <div className="font-semibold text-gray-800 text-xl mb-3">Maximum organisations exceeded</div>
+              <div className="text-gray-600 mb-4 leading-relaxed">
+                You have logged <span className="font-semibold text-blue-600">{placementsCount(data.periods)} organisations</span>, but the SRA allows a maximum of 4. You can continue adding periods to review your experience, but you'll need to select your best 4 organisations when submitting your QWE.
+              </div>
+              <div className="text-gray-500 text-sm bg-white/50 rounded-lg p-3 border border-gray-100">
+                <span className="font-semibold text-blue-600">💡 Tip:</span> Consider which periods demonstrate your best experience and competencies when preparing your final QWE submission.
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

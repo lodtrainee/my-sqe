@@ -53,7 +53,25 @@ export default function Home() {
 
           <div className="col-span-1 fade-in-up" style={{ animationDelay: '0.4s' }}>
             <SectionTitle>Total Placements</SectionTitle>
-            <div className="text-[clamp(20px,4vw,32px)] font-extrabold text-[color:var(--color-heading)] mb-6 tracking-tight">{placements} out of 4 organisations</div>
+            <div className="text-[clamp(20px,4vw,32px)] font-extrabold text-[color:var(--color-heading)] mb-6 tracking-tight flex items-center gap-3">
+              {placements} out of 4 organisations
+              {placements > 4 && (
+                <div className="relative group flex items-center">
+                                     <div className="w-6 h-6 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 shadow-lg shadow-gray-400/50 flex items-center justify-center cursor-pointer hover:shadow-xl hover:shadow-gray-500/60 transition-all duration-300">
+                     <span className="text-white font-black text-sm">!</span>
+                   </div>
+                  
+                  {/* Tooltip */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-10">
+                    Maximum organisations exceeded
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+
+
             <div className="space-y-8">
               {/* Option 3: Milestone-based Design */}
               <div className="max-w-[720px]">
@@ -90,7 +108,7 @@ export default function Home() {
                     <div 
                       className="h-1 bg-gradient-to-r from-red-400 to-pink-500 rounded-full transition-all duration-700 ease-out shadow-sm"
                       style={{ 
-                        width: `${(placements / 4) * 100}%`,
+                        width: `${Math.min((placements / 4) * 100, 100)}%`,
                         animation: 'fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) both',
                         animationDelay: '0.5s'
                       }}
@@ -106,11 +124,11 @@ export default function Home() {
                      animationDelay: '0.6s'
                    }}>
                 <div className="flex items-start gap-5">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md">
-                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                    </svg>
-                  </div>
+                                 <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-emerald-50 via-teal-50 to-emerald-100 shadow-inner flex items-center justify-center">
+                 <svg className="w-6 h-6 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                 </svg>
+               </div>
                   <div>
                     <h3 className="text-lg font-semibold text-[color:var(--color-heading)] mb-3 tracking-tight">Placement Information</h3>
                     <p className="text-[color:var(--foreground)] leading-relaxed text-[15px]">
