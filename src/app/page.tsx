@@ -52,7 +52,7 @@ export default function Home() {
           </div>
 
           <div className="col-span-1 fade-in-up" style={{ animationDelay: '0.4s' }}>
-            <SectionTitle>Total Placements</SectionTitle>
+            <SectionTitle>Total Organisations</SectionTitle>
             <div className="text-[clamp(20px,4vw,32px)] font-extrabold text-[color:var(--color-heading)] mb-6 tracking-tight flex items-center gap-3">
               {placements} out of 4 organisations
               {placements > 4 && (
@@ -124,13 +124,13 @@ export default function Home() {
                      animationDelay: '0.6s'
                    }}>
                 <div className="flex items-start gap-5">
-                                 <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-emerald-50 via-teal-50 to-emerald-100 shadow-inner flex items-center justify-center">
-                 <svg className="w-6 h-6 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                                 <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-pink-50 via-pink-25 to-white shadow-inner flex items-center justify-center">
+                 <svg className="w-6 h-6" style={{ color: '#252E4B' }} fill="currentColor" viewBox="0 0 20 20">
                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                  </svg>
                </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-[color:var(--color-heading)] mb-3 tracking-tight">Placement Information</h3>
+                    <h3 className="text-lg font-semibold text-[color:var(--color-heading)] mb-3 tracking-tight">QWE Information</h3>
                     <p className="text-[color:var(--foreground)] leading-relaxed text-[15px]">
                       All of your assignments through LOD count as 1 organisation. QWE can be gained in up to 4 organisations.
                     </p>
