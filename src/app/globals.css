@@ -9,6 +9,11 @@
   /* Brand Colors */
   --brand-teal: #12c7b3;
   --brand-red: #ea6b6f;
+  --lod-mint: #1ABF9B;
+  --blueberry: #252E4B;
+  --azure: #108DF8;
+  --coral: #EC5F66;
+  --canary: #FED55B;
   
   /* Neutral Colors */
   --muted: #f8fafc;
@@ -80,6 +85,7 @@ body {
 }
 
 .clickable {
+  cursor: pointer;
   transition: var(--transition-fast);
   will-change: transform, opacity, background-color, box-shadow;
 }
@@ -272,6 +278,8 @@ body {
   background-clip: text;
 }
 
+
+
 /* Holographic effect for charts */
 .holographic {
   background: linear-gradient(135deg, 
@@ -309,4 +317,17 @@ body {
 .animate-pulse-3 {
   animation: pulse-3 1.5s ease-in-out;
 }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.floating {
+  animation: float 3s ease-in-out infinite;
+}
+
+
+
+
 

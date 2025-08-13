@@ -53,7 +53,7 @@ export default function Home() {
 
           <div className="col-span-1 fade-in-up" style={{ animationDelay: '0.4s' }}>
             <SectionTitle>Total Placements</SectionTitle>
-            <div className="text-[clamp(20px,4vw,32px)] font-extrabold text-[color:var(--color-heading)] mb-6 tracking-tight">{placements} out of 4 placements</div>
+            <div className="text-[clamp(20px,4vw,32px)] font-extrabold text-[color:var(--color-heading)] mb-6 tracking-tight">{placements} out of 4 organisations</div>
             <div className="space-y-8">
               {/* Option 3: Milestone-based Design */}
               <div className="max-w-[720px]">
@@ -64,7 +64,7 @@ export default function Home() {
                       <div 
                         className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 transition-all duration-500 ease-out transform hover:scale-110 ${
                           step <= placements 
-                            ? 'bg-gradient-to-br from-red-400 to-pink-500 text-white shadow-lg shadow-red-500/30' 
+                            ? 'bg-gradient-to-br from-red-400 to-pink-500 text-white shadow-lg shadow-red-500/30 floating' 
                             : 'bg-gray-200 text-gray-400 hover:bg-gray-300 hover:shadow-md'
                         }`}
                         style={{ 
@@ -114,7 +114,7 @@ export default function Home() {
                   <div>
                     <h3 className="text-lg font-semibold text-[color:var(--color-heading)] mb-3 tracking-tight">Placement Information</h3>
                     <p className="text-[color:var(--foreground)] leading-relaxed text-[15px]">
-                      All of your LOD assignments count as 1 placement. You need to complete 4 placements to meet the QWE requirements.
+                      All of your assignments through LOD count as 1 organisation. QWE can be gained in up to 4 organisations.
                     </p>
                   </div>
                 </div>

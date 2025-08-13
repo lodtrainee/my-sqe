@@ -155,6 +155,21 @@ export function addReflection(current: AppData, periodId: string, reflection: Ne
   return data;
 }
 
+export function updateReflection(current: AppData, periodId: string, reflectionId: string, reflection: NewReflectionInput): AppData {
+  const data: AppData = { ...current, periods: [...current.periods] };
+  const periodIndex = data.periods.findIndex((p) => p.id === periodId);
+  if (periodIndex === -1) return current;
+  
+  const period = { ...data.periods[periodIndex], reflections: [...data.periods[periodIndex].reflections] };
+  const reflectionIndex = period.reflections.findIndex((r) => r.id === reflectionId);
+  if (reflectionIndex === -1) return current;
+  
+  period.reflections[reflectionIndex] = { id: reflectionId, ...reflection };
+  data.periods[periodIndex] = period;
+  save(data);
+  return data;
+}
+
 export function deleteReflection(current: AppData, periodId: string, reflectionId: string): AppData {
   const data: AppData = { ...current, periods: [...current.periods] };
   const index = data.periods.findIndex((p) => p.id === periodId);
@@ -166,14 +181,32 @@ export function deleteReflection(current: AppData, periodId: string, reflectionI
   return data;
 }
 
+export function deletePeriod(current: AppData, periodId: string): AppData {
+  const data: AppData = { ...current, periods: [...current.periods] };
+  data.periods = data.periods.filter((p) => p.id !== periodId);
+  save(data);
+  return data;
+}
+
 export function computeTotalMonths(periods: QwePeriod[]): number {
-  let totalMonths = 0;
-  for (const p of periods) {
-    const start = new Date(p.startDate);
-    const end = new Date(p.endDate);
-    const days = Math.max(0, differenceInDays(end, start));
-    totalMonths += days / 30; // simple approx to get a decimal month
-  }
+  if (periods.length === 0) return 0;
+  
+  // Sort periods by start date
+  const sortedPeriods = [...periods].sort((a, b) => 
+    new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+  );
+  
+  // Find the overall start and end dates
+  const allStartDates = sortedPeriods.map(p => new Date(p.startDate));
+  const allEndDates = sortedPeriods.map(p => new Date(p.endDate));
+  
+  const overallStart = new Date(Math.min(...allStartDates.map(d => d.getTime())));
+  const overallEnd = new Date(Math.max(...allEndDates.map(d => d.getTime())));
+  
+  // Calculate total days and convert to months
+  const totalDays = Math.max(0, differenceInDays(overallEnd, overallStart));
+  const totalMonths = totalDays / 30; // simple approx to get a decimal month
+  
   // round to one decimal for display
   return Math.round(totalMonths * 10) / 10;
 }
@@ -191,7 +224,11 @@ export function competencyCounts(periods: QwePeriod[]): Record<LowLevelCompetenc
 }
 
 export function placementsCount(periods: QwePeriod[]): number {
-  return periods.filter((p) => p.assignmentType === "LOD").length;
+  const lodPeriods = periods.filter((p) => p.assignmentType === "LOD").length;
+  const nonLodPeriods = periods.filter((p) => p.assignmentType === "Standard").length;
+  
+  // All LOD periods count as 1 placement, each non-LOD period counts as 1 placement
+  return (lodPeriods > 0 ? 1 : 0) + nonLodPeriods;
 }
 
 // Convenience for users adding LOD periods manually

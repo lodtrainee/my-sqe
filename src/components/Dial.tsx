@@ -60,13 +60,14 @@ export function Dial({ label, count }: Props) {
         style={{ width: size, height: size }}
       >
         {/* Progress ring with conic gradient */}
-        <div className="relative w-full h-full rounded-full overflow-hidden">
+        <div className="relative w-full h-full rounded-full overflow-hidden shadow-lg shadow-gray-300/50">
           {/* Background ring */}
           <div 
             className="w-full h-full rounded-full"
             style={{ 
               background: "var(--muted)",
-              padding: "8px"
+              padding: "8px",
+              boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.1)"
             }}
           />
           
@@ -87,13 +88,16 @@ export function Dial({ label, count }: Props) {
           )}
         </div>
 
+
+
         {/* Inner disc with modern styling */}
         <div className="absolute inset-0 grid place-items-center pointer-events-none">
           <div 
-            className="rounded-full bg-white/90 backdrop-blur-sm transition-all duration-300 group-hover:scale-110" 
+            className="rounded-full bg-white/90 backdrop-blur-sm transition-all duration-300 group-hover:scale-110 shadow-md" 
             style={{ 
               width: `calc(100% - ${baseInnerPaddingPx}px)`, 
-              height: `calc(100% - ${baseInnerPaddingPx}px)`
+              height: `calc(100% - ${baseInnerPaddingPx}px)`,
+              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255, 255, 255, 0.8)"
             }} 
           />
         </div>
@@ -119,7 +123,7 @@ export function Dial({ label, count }: Props) {
         {/* Enhanced hover overlay */}
         <div
           aria-hidden
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 group-focus:opacity-100 pointer-events-none transition-all duration-300 z-10 rounded-full overflow-hidden"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 group-focus:opacity-100 pointer-events-none transition-all duration-300 z-10 rounded-full overflow-hidden shadow-2xl shadow-gray-400/40"
           style={{ 
             width: `${overlayScale * 100}%`, 
             height: `${overlayScale * 100}%`
@@ -131,7 +135,8 @@ export function Dial({ label, count }: Props) {
               className="w-full h-full rounded-full"
               style={{ 
                 background: "var(--muted)",
-                padding: "12px"
+                padding: "12px",
+                boxShadow: "inset 0 3px 6px rgba(0, 0, 0, 0.15)"
               }}
             />
             
@@ -153,10 +158,11 @@ export function Dial({ label, count }: Props) {
             
             <div className="absolute inset-0 grid place-items-center">
               <div 
-                className="rounded-full bg-white/90 backdrop-blur-sm transition-all duration-300" 
+                className="rounded-full bg-white/90 backdrop-blur-sm transition-all duration-300 shadow-lg" 
                 style={{ 
                   width: `calc(100% - ${overlayInnerPaddingPx}px)`, 
-                  height: `calc(100% - ${overlayInnerPaddingPx}px)`
+                  height: `calc(100% - ${overlayInnerPaddingPx}px)`,
+                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15), inset 0 1px 3px rgba(255, 255, 255, 0.9)"
                 }} 
               />
             </div>
