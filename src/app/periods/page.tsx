@@ -21,6 +21,7 @@ export default function PeriodsPage() {
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [expandedReflections, setExpandedReflections] = useState<Set<string>>(new Set());
   const [expandedFields, setExpandedFields] = useState<Map<string, Set<string>>>(new Map());
+  const [originalScrollPositions, setOriginalScrollPositions] = useState<Map<string, number>>(new Map());
   const [reflectionForm, setReflectionForm] = useState({
     highLevelAreas: [] as HighLevelArea[],
     lowLevelCompetencies: [] as LowLevelCompetency[],
@@ -268,23 +269,23 @@ export default function PeriodsPage() {
       const reflectionFields = new Set(newMap.get(reflectionId) || []);
       
       if (reflectionFields.has(fieldName)) {
-        // If we're collapsing, store the button position and scroll after collapse
-        const button = document.querySelector(`[data-reflection="${reflectionId}"][data-field="${fieldName}"]`);
-        if (button) {
-          const buttonRect = button.getBoundingClientRect();
-          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          const targetScrollPosition = scrollTop + buttonRect.top - 100; // 100px offset from top
-          
-          // Use setTimeout to scroll after the state update and re-render
+        // If we're collapsing, scroll back to the original position
+        const fieldKey = `${reflectionId}-${fieldName}`;
+        const originalPosition = originalScrollPositions.get(fieldKey);
+        if (originalPosition !== undefined) {
           setTimeout(() => {
             window.scrollTo({
-              top: targetScrollPosition,
+              top: originalPosition,
               behavior: 'smooth'
             });
           }, 50);
         }
         reflectionFields.delete(fieldName);
       } else {
+        // If we're expanding, store the current scroll position
+        const fieldKey = `${reflectionId}-${fieldName}`;
+        const currentScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+        setOriginalScrollPositions(prev => new Map(prev).set(fieldKey, currentScrollPosition));
         reflectionFields.add(fieldName);
       }
       
