@@ -813,14 +813,20 @@ export default function PeriodsPage() {
                           </div>
                         </div>
                         <div className="text-sm text-slate-500 mb-4">Logged on: {formatDate(r.loggedOn)}</div>
-                                              <div className="bg-[color:var(--muted)] rounded-xl p-4 text-sm mb-4 border border-gray-200">
-                        <div className="font-semibold mb-2">Activity</div>
-                        {r.activity}
-                      </div>
-                      <div className="bg-[color:var(--muted)] rounded-xl p-4 text-sm border border-gray-200">
-                        <div className="font-semibold mb-2">Learning</div>
-                        {r.learning}
-                      </div>
+                        
+                        {/* Only show current activity/learning when NOT editing */}
+                        {editingReflection !== r.id && (
+                          <>
+                            <div className="bg-[color:var(--muted)] rounded-xl p-4 text-sm mb-4 border border-gray-200">
+                              <div className="font-semibold mb-2">Activity</div>
+                              {r.activity}
+                            </div>
+                            <div className="bg-[color:var(--muted)] rounded-xl p-4 text-sm border border-gray-200">
+                              <div className="font-semibold mb-2">Learning</div>
+                              {r.learning}
+                            </div>
+                          </>
+                        )}
                       
                       {/* Edit Reflection Form - Inline with this specific reflection */}
                       {editingReflection === r.id && (
