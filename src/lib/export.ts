@@ -16,124 +16,124 @@ export function exportQwePeriodToPDF(period: QwePeriod): void {
   // Set up fonts and styling
   doc.setFont('helvetica');
   
-  // PROFESSIONAL HEADER - Clean and modern
+  // HEADER
   doc.setFillColor(26, 191, 155); // LOD mint
-  doc.rect(0, 0, 210, 35, 'F');
+  doc.rect(0, 0, 210, 30, 'F');
   
   // LOD Logo
-  addLODLogo(doc, 20, 8, 80, 20);
+  addLODLogo(doc, 20, 5, 80, 20);
   
   // Title
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(24);
+  doc.setFontSize(20);
   doc.setFont('helvetica', 'bold');
-  doc.text('QWE REPORT', 105, 25, { align: 'center' });
+  doc.text('QWE REPORT', 105, 20, { align: 'center' });
   
   // Reset text color
   doc.setTextColor(28, 46, 75); // Dark blueberry color
   
-  // SUMMARY SECTION - Clean cards
+  // SUMMARY SECTION
   // Company Info Card
   doc.setFillColor(255, 255, 255);
-  doc.rect(20, 45, 170, 40, 'F');
+  doc.rect(20, 40, 170, 35, 'F');
   doc.setDrawColor(226, 232, 240);
-  doc.rect(20, 45, 170, 40, 'S');
+  doc.rect(20, 40, 170, 35, 'S');
   
   // Accent line
   doc.setFillColor(26, 191, 155);
-  doc.rect(20, 45, 170, 3, 'F');
+  doc.rect(20, 40, 170, 2, 'F');
   
-  doc.setFontSize(14);
+  doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
-  doc.text('PERIOD SUMMARY', 25, 58);
+  doc.text('PERIOD SUMMARY', 25, 52);
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(11);
+  doc.setFontSize(10);
   
-  doc.text(`${period.companyName}`, 25, 68);
-  doc.text(`${period.jobTitle} • ${period.assignmentType}`, 25, 75);
-  doc.text(`${new Date(period.startDate).toLocaleDateString()} - ${new Date(period.endDate).toLocaleDateString()}`, 25, 82);
+  doc.text(`${period.companyName}`, 25, 60);
+  doc.text(`${period.jobTitle} • ${period.assignmentType}`, 25, 67);
+  doc.text(`${new Date(period.startDate).toLocaleDateString()} - ${new Date(period.endDate).toLocaleDateString()}`, 25, 74);
   
   // Solicitor Card
   doc.setFillColor(255, 255, 255);
-  doc.rect(20, 95, 170, 30, 'F');
+  doc.rect(20, 85, 170, 25, 'F');
   doc.setDrawColor(226, 232, 240);
-  doc.rect(20, 95, 170, 30, 'S');
+  doc.rect(20, 85, 170, 25, 'S');
   
   // Accent line
   doc.setFillColor(26, 191, 155);
-  doc.rect(20, 95, 170, 3, 'F');
+  doc.rect(20, 85, 170, 2, 'F');
   
-  doc.setFontSize(14);
+  doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
-  doc.text('CONFIRMING SOLICITOR', 25, 108);
+  doc.text('CONFIRMING SOLICITOR', 25, 97);
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(11);
+  doc.setFontSize(10);
   
-  doc.text(`${period.confirmingSolicitor.fullName}`, 25, 118);
-  doc.text(`SRA: ${period.confirmingSolicitor.sraNumber} • ${period.confirmingSolicitor.email}`, 25, 125);
+  doc.text(`${period.confirmingSolicitor.fullName}`, 25, 105);
+  doc.text(`SRA: ${period.confirmingSolicitor.sraNumber} • ${period.confirmingSolicitor.email}`, 25, 112);
   
   // REFLECTIONS SECTION
-  doc.setFontSize(18);
+  doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
-  doc.text('REFLECTIONS', 20, 145);
+  doc.text('REFLECTIONS', 20, 130);
   doc.setFont('helvetica', 'normal');
   
-  let yPosition = 155;
+  let yPosition = 140;
   let pageNumber = 1;
   
   period.reflections.forEach((reflection, index) => {
-    // Check if we need a new page - FIXED: More conservative page break
-    if (yPosition > 220) {
+    // Check if we need a new page - VERY conservative page break
+    if (yPosition > 200) {
       doc.addPage();
       pageNumber++;
       yPosition = 30;
       
       // Page header
       doc.setFillColor(26, 191, 155);
-      doc.rect(0, 0, 210, 20, 'F');
+      doc.rect(0, 0, 210, 15, 'F');
       
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(12);
+      doc.setFontSize(10);
       doc.setFont('helvetica', 'bold');
-      doc.text(`${period.companyName} • Page ${pageNumber}`, 105, 12, { align: 'center' });
+      doc.text(`${period.companyName} • Page ${pageNumber}`, 105, 9, { align: 'center' });
       doc.setTextColor(28, 46, 75);
       doc.setFont('helvetica', 'normal');
     }
     
     // Reflection card
     doc.setFillColor(255, 255, 255);
-    doc.rect(20, yPosition, 170, 60, 'F');
+    doc.rect(20, yPosition, 170, 50, 'F');
     doc.setDrawColor(226, 232, 240);
-    doc.rect(20, yPosition, 170, 60, 'S');
+    doc.rect(20, yPosition, 170, 50, 'S');
     
     // Accent line
     doc.setFillColor(26, 191, 155);
-    doc.rect(20, yPosition, 170, 3, 'F');
+    doc.rect(20, yPosition, 170, 2, 'F');
     
     // Reflection number
     doc.setFillColor(26, 191, 155);
-    doc.circle(35, yPosition + 10, 6, 'F');
+    doc.circle(35, yPosition + 8, 5, 'F');
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(9);
+    doc.setFontSize(8);
     doc.setFont('helvetica', 'bold');
-    doc.text(`${index + 1}`, 35, yPosition + 13, { align: 'center' });
+    doc.text(`${index + 1}`, 35, yPosition + 11, { align: 'center' });
     
     // Project title
     doc.setTextColor(28, 46, 75);
-    doc.setFontSize(12);
+    doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
-    doc.text(reflection.projectName, 50, yPosition + 13);
+    doc.text(reflection.projectName, 50, yPosition + 11);
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
+    doc.setFontSize(8);
     
-    // Content sections - FIXED: Better spacing and no cutoff
+    // Content sections - SIMPLIFIED and FIXED
     const sections = [
       { label: 'What did you do', content: reflection.activity },
       { label: 'What was the outcome', content: reflection.outcome || "Not specified" },
       { label: 'What did you learn', content: reflection.learning }
     ];
     
-    let contentY = yPosition + 20;
+    let contentY = yPosition + 15;
     sections.forEach((section) => {
       // Section label
       doc.setFont('helvetica', 'bold');
@@ -142,22 +142,22 @@ export function exportQwePeriodToPDF(period: QwePeriod): void {
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(28, 46, 75);
       
-      // Content with proper wrapping - FIXED: Wider text area
-      const lines = doc.splitTextToSize(section.content, 140);
-      doc.text(lines, 25, contentY + 4);
+      // Content with proper wrapping - NARROWER text area to prevent overflow
+      const lines = doc.splitTextToSize(section.content, 130);
+      doc.text(lines, 25, contentY + 3);
       
-      contentY += (lines.length * 3.5) + 6;
+      contentY += (lines.length * 3) + 5;
     });
     
-    // Calculate height and move to next position - FIXED: Better height calculation
-    const totalHeight = Math.max(60, contentY - yPosition + 10);
-    yPosition += totalHeight + 10;
+    // Calculate height and move to next position - SIMPLIFIED calculation
+    const totalHeight = Math.max(50, contentY - yPosition + 5);
+    yPosition += totalHeight + 8;
   });
   
   // Footer
-  doc.setFontSize(9);
+  doc.setFontSize(8);
   doc.setTextColor(100, 100, 100);
-  doc.text(`Generated ${new Date().toLocaleDateString()} • LOD QWE Tracker`, 105, 285, { align: 'center' });
+  doc.text(`Generated ${new Date().toLocaleDateString()} • LOD QWE Tracker`, 105, 280, { align: 'center' });
   
   // Save the PDF
   const fileName = `QWE_Period_${period.companyName}_${new Date().getFullYear()}.pdf`;
