@@ -25,6 +25,7 @@ export interface Reflection {
   lowLevelCompetencies: LowLevelCompetency[]; // A1..D3
   projectName: string;
   activity: string;
+  outcome: string;
   learning: string;
 }
 

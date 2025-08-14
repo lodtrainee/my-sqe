@@ -19,12 +19,14 @@ export default function PeriodsPage() {
   const [addingReflection, setAddingReflection] = useState<string | null>(null);
   const [editingReflection, setEditingReflection] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [expandedReflections, setExpandedReflections] = useState<Set<string>>(new Set());
   const [reflectionForm, setReflectionForm] = useState({
     highLevelAreas: [] as HighLevelArea[],
     lowLevelCompetencies: [] as LowLevelCompetency[],
     selectedLowLevelCompetencies: [] as LowLevelCompetency[],
     projectName: "",
     activity: "",
+    outcome: "",
     learning: "",
   });
   const [form, setForm] = useState({
@@ -155,6 +157,7 @@ export default function PeriodsPage() {
       selectedLowLevelCompetencies: [],
       projectName: "",
       activity: "",
+      outcome: "",
       learning: "",
     });
   }
@@ -170,6 +173,7 @@ export default function PeriodsPage() {
       selectedLowLevelCompetencies: reflection.lowLevelCompetencies,
       projectName: reflection.projectName || "",
       activity: reflection.activity,
+      outcome: reflection.outcome || "",
       learning: reflection.learning,
     });
     
@@ -183,10 +187,13 @@ export default function PeriodsPage() {
       errors.push("Project name is required");
     }
     if (!reflectionForm.activity.trim()) {
-      errors.push("Activity field is required");
+      errors.push("What did you do? field is required");
+    }
+    if (!reflectionForm.outcome.trim()) {
+      errors.push("What was the outcome? field is required");
     }
     if (!reflectionForm.learning.trim()) {
-      errors.push("Learning field is required");
+      errors.push("What did you learn? field is required");
     }
     if (reflectionForm.highLevelAreas.length === 0) {
       errors.push("Please select at least one high-level competency");
@@ -212,6 +219,7 @@ export default function PeriodsPage() {
         lowLevelCompetencies: reflectionForm.selectedLowLevelCompetencies,
         projectName: reflectionForm.projectName,
         activity: reflectionForm.activity,
+        outcome: reflectionForm.outcome,
         learning: reflectionForm.learning,
       });
     } else {
@@ -222,6 +230,7 @@ export default function PeriodsPage() {
         lowLevelCompetencies: reflectionForm.selectedLowLevelCompetencies,
         projectName: reflectionForm.projectName,
         activity: reflectionForm.activity,
+        outcome: reflectionForm.outcome,
         learning: reflectionForm.learning,
       });
     }
@@ -234,9 +243,22 @@ export default function PeriodsPage() {
       selectedLowLevelCompetencies: [],
       projectName: "",
       activity: "",
+      outcome: "",
       learning: "",
     });
     refresh();
+  }
+
+  function toggleReflectionExpanded(reflectionId: string) {
+    setExpandedReflections(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(reflectionId)) {
+        newSet.delete(reflectionId);
+      } else {
+        newSet.add(reflectionId);
+      }
+      return newSet;
+    });
   }
 
   function toggleHighLevelArea(area: HighLevelArea) {
@@ -723,14 +745,14 @@ export default function PeriodsPage() {
                         />
                       </div>
 
-                      <div className="grid sm:grid-cols-2 gap-6">
+                      <div className="space-y-6">
                         <div>
                           <label className="block text-sm font-semibold text-[color:var(--color-heading)] mb-2">
-                            Activity <span className="text-red-500">*</span>
+                            What did you do? <span className="text-red-500">*</span>
                           </label>
                           <textarea
                             className="border-2 border-gray-200 rounded-xl p-4 text-lg transition-all duration-300 focus:border-[color:var(--brand-teal)] focus:outline-none focus:ring-4 focus:ring-[color:var(--brand-teal)]/20 w-full h-32 resize-none"
-                            placeholder="Describe what you did..."
+                            placeholder="Describe the specific actions you took, tasks you completed, or work you performed..."
                             value={reflectionForm.activity}
                             onChange={(e) => setReflectionForm({...reflectionForm, activity: e.target.value})}
                             spellCheck="true"
@@ -740,11 +762,25 @@ export default function PeriodsPage() {
                         </div>
                         <div>
                           <label className="block text-sm font-semibold text-[color:var(--color-heading)] mb-2">
-                            Learning <span className="text-red-500">*</span>
+                            What was the outcome? <span className="text-red-500">*</span>
                           </label>
                           <textarea
                             className="border-2 border-gray-200 rounded-xl p-4 text-lg transition-all duration-300 focus:border-[color:var(--brand-teal)] focus:outline-none focus:ring-4 focus:ring-[color:var(--brand-teal)]/20 w-full h-32 resize-none"
-                            placeholder="What did you learn from this experience?"
+                            placeholder="What was the result of your actions? What impact did you have?"
+                            value={reflectionForm.outcome}
+                            onChange={(e) => setReflectionForm({...reflectionForm, outcome: e.target.value})}
+                            spellCheck="true"
+                            autoCorrect="on"
+                            autoCapitalize="sentences"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-[color:var(--color-heading)] mb-2">
+                            What did you learn? <span className="text-red-500">*</span>
+                          </label>
+                          <textarea
+                            className="border-2 border-gray-200 rounded-xl p-4 text-lg transition-all duration-300 focus:border-[color:var(--brand-teal)] focus:outline-none focus:ring-4 focus:ring-[color:var(--brand-teal)]/20 w-full h-32 resize-none"
+                            placeholder="What skills, knowledge, or insights did you gain from this experience?"
                             value={reflectionForm.learning}
                             onChange={(e) => setReflectionForm({...reflectionForm, learning: e.target.value})}
                             spellCheck="true"
@@ -814,16 +850,50 @@ export default function PeriodsPage() {
                         </div>
                         <div className="text-sm text-slate-500 mb-4">Logged on: {formatDate(r.loggedOn)}</div>
                         
-                        {/* Only show current activity/learning when NOT editing */}
+                        {/* Only show current reflection content when NOT editing */}
                         {editingReflection !== r.id && (
                           <>
                             <div className="bg-[color:var(--muted)] rounded-xl p-4 text-sm mb-4 border border-gray-200">
-                              <div className="font-semibold mb-2">Activity</div>
-                              {r.activity}
+                              <div className="font-semibold mb-2">What did you do?</div>
+                              <div className={`whitespace-pre-wrap break-words overflow-hidden ${!expandedReflections.has(r.id) ? 'max-h-[3rem] line-clamp-2' : ''}`}>
+                                {r.activity}
+                              </div>
+                              {r.activity.length > 200 && (
+                                <button 
+                                  onClick={() => toggleReflectionExpanded(r.id)}
+                                  className="text-[#252E4B] hover:text-[#252E4B]/80 text-xs font-medium mt-2"
+                                >
+                                  {expandedReflections.has(r.id) ? 'Show less' : 'Show more'}
+                                </button>
+                              )}
+                            </div>
+                            <div className="bg-[color:var(--muted)] rounded-xl p-4 text-sm mb-4 border border-gray-200">
+                              <div className="font-semibold mb-2">What was the outcome?</div>
+                              <div className={`whitespace-pre-wrap break-words overflow-hidden ${!expandedReflections.has(r.id) ? 'max-h-[3rem] line-clamp-2' : ''}`}>
+                                {r.outcome || "Not specified"}
+                              </div>
+                              {(r.outcome || "").length > 200 && (
+                                <button 
+                                  onClick={() => toggleReflectionExpanded(r.id)}
+                                  className="text-[#252E4B] hover:text-[#252E4B]/80 text-xs font-medium mt-2"
+                                >
+                                  {expandedReflections.has(r.id) ? 'Show less' : 'Show more'}
+                                </button>
+                              )}
                             </div>
                             <div className="bg-[color:var(--muted)] rounded-xl p-4 text-sm border border-gray-200">
-                              <div className="font-semibold mb-2">Learning</div>
-                              {r.learning}
+                              <div className="font-semibold mb-2">What did you learn?</div>
+                              <div className={`whitespace-pre-wrap break-words overflow-hidden ${!expandedReflections.has(r.id) ? 'max-h-[3rem] line-clamp-2' : ''}`}>
+                                {r.learning}
+                              </div>
+                              {r.learning.length > 200 && (
+                                <button 
+                                  onClick={() => toggleReflectionExpanded(r.id)}
+                                  className="text-[#252E4B] hover:text-[#252E4B]/80 text-xs font-medium mt-2"
+                                >
+                                  {expandedReflections.has(r.id) ? 'Show less' : 'Show more'}
+                                </button>
+                              )}
                             </div>
                           </>
                         )}
@@ -919,14 +989,14 @@ export default function PeriodsPage() {
                             />
                           </div>
 
-                          <div className="grid sm:grid-cols-2 gap-6">
+                          <div className="space-y-6">
                             <div>
                               <label className="block text-sm font-semibold text-[color:var(--color-heading)] mb-2">
-                                Activity <span className="text-red-500">*</span>
+                                What did you do? <span className="text-red-500">*</span>
                               </label>
                               <textarea
                                 className="border-2 border-gray-200 rounded-xl p-4 text-lg transition-all duration-300 focus:border-[color:var(--brand-teal)] focus:outline-none focus:ring-4 focus:ring-[color:var(--brand-teal)]/20 w-full h-32 resize-none"
-                                placeholder="Describe what you did..."
+                                placeholder="Describe the specific actions you took, tasks you completed, or work you performed..."
                                 value={reflectionForm.activity}
                                 onChange={(e) => setReflectionForm({...reflectionForm, activity: e.target.value})}
                                 spellCheck="true"
@@ -936,11 +1006,25 @@ export default function PeriodsPage() {
                             </div>
                             <div>
                               <label className="block text-sm font-semibold text-[color:var(--color-heading)] mb-2">
-                                Learning <span className="text-red-500">*</span>
+                                What was the outcome? <span className="text-red-500">*</span>
                               </label>
                               <textarea
                                 className="border-2 border-gray-200 rounded-xl p-4 text-lg transition-all duration-300 focus:border-[color:var(--brand-teal)] focus:outline-none focus:ring-4 focus:ring-[color:var(--brand-teal)]/20 w-full h-32 resize-none"
-                                placeholder="What did you learn from this experience?"
+                                placeholder="What was the result of your actions? What impact did you have?"
+                                value={reflectionForm.outcome}
+                                onChange={(e) => setReflectionForm({...reflectionForm, outcome: e.target.value})}
+                                spellCheck="true"
+                                autoCorrect="on"
+                                autoCapitalize="sentences"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-semibold text-[color:var(--color-heading)] mb-2">
+                                What did you learn? <span className="text-red-500">*</span>
+                              </label>
+                              <textarea
+                                className="border-2 border-gray-200 rounded-xl p-4 text-lg transition-all duration-300 focus:border-[color:var(--brand-teal)] focus:outline-none focus:ring-4 focus:ring-[color:var(--brand-teal)]/20 w-full h-32 resize-none"
+                                placeholder="What skills, knowledge, or insights did you gain from this experience?"
                                 value={reflectionForm.learning}
                                 onChange={(e) => setReflectionForm({...reflectionForm, learning: e.target.value})}
                                 spellCheck="true"

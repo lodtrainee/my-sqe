@@ -132,3 +132,4 @@ export function openEmailClient(subject: string, body: string) {
   const mailtoLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   window.open(mailtoLink);
 }
+

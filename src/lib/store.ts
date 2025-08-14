@@ -69,6 +69,7 @@ function getDefaultData(): AppData {
       highLevelAreas: high as any,
       lowLevelCompetencies: low,
       activity: "Worked on matter X",
+      outcome: "Completed the task successfully",
       learning: "Learned Y",
     });
   };

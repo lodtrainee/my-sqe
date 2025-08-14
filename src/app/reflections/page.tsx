@@ -17,6 +17,7 @@ export default function ReflectionsPage() {
   const [expandedCompetencies, setExpandedCompetencies] = useState<Set<string>>(new Set());
   const [selectedReflections, setSelectedReflections] = useState<Set<string>>(new Set());
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
+  const [expandedReflections, setExpandedReflections] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const savedData = localStorage.getItem("qwe-data-v1");
@@ -172,6 +173,18 @@ export default function ReflectionsPage() {
       newSelected.add(reflectionId);
     }
     setSelectedReflections(newSelected);
+  };
+
+  const toggleReflectionExpanded = (reflectionId: string) => {
+    setExpandedReflections(prev => {
+      const newExpanded = new Set(prev);
+      if (newExpanded.has(reflectionId)) {
+        newExpanded.delete(reflectionId);
+      } else {
+        newExpanded.add(reflectionId);
+      }
+      return newExpanded;
+    });
   };
 
   const handleRemoveSelected = () => {
@@ -383,8 +396,32 @@ export default function ReflectionsPage() {
                                           {new Date(reflection.loggedOn).toLocaleDateString()}
                                         </span>
                                       </div>
-                                      <p className="text-sm text-gray-700 mb-2">{reflection.activity}</p>
-                                      <p className="text-sm text-gray-600">{reflection.learning}</p>
+                                      <div className="mb-2">
+                                        <div className={`whitespace-pre-wrap break-words overflow-hidden ${!expandedReflections.has(reflection.id) ? 'max-h-[3rem] line-clamp-2' : ''}`}>
+                                          <p className="text-sm text-gray-700">{reflection.activity}</p>
+                                        </div>
+                                        {reflection.activity.length > 200 && (
+                                          <button 
+                                            onClick={() => toggleReflectionExpanded(reflection.id)}
+                                            className="text-[#252E4B] hover:text-[#252E4B]/80 text-xs font-medium mt-1"
+                                          >
+                                            {expandedReflections.has(reflection.id) ? 'Show less' : 'Show more'}
+                                          </button>
+                                        )}
+                                      </div>
+                                      <div>
+                                        <div className={`whitespace-pre-wrap break-words overflow-hidden ${!expandedReflections.has(reflection.id) ? 'max-h-[3rem] line-clamp-2' : ''}`}>
+                                          <p className="text-sm text-gray-600">{reflection.learning}</p>
+                                        </div>
+                                        {reflection.learning.length > 200 && (
+                                          <button 
+                                            onClick={() => toggleReflectionExpanded(reflection.id)}
+                                            className="text-[#252E4B] hover:text-[#252E4B]/80 text-xs font-medium mt-1"
+                                          >
+                                            {expandedReflections.has(reflection.id) ? 'Show less' : 'Show more'}
+                                          </button>
+                                        )}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -412,8 +449,32 @@ export default function ReflectionsPage() {
                                     {new Date(reflection.loggedOn).toLocaleDateString()}
                                   </span>
                                 </div>
-                                <p className="text-sm text-gray-700 mb-2">{reflection.activity}</p>
-                                <p className="text-sm text-gray-600">{reflection.learning}</p>
+                                <div className="mb-2">
+                                  <div className={`whitespace-pre-wrap break-words overflow-hidden ${!expandedReflections.has(reflection.id) ? 'max-h-[3rem] line-clamp-2' : ''}`}>
+                                    <p className="text-sm text-gray-700">{reflection.activity}</p>
+                                  </div>
+                                  {reflection.activity.length > 200 && (
+                                    <button 
+                                      onClick={() => toggleReflectionExpanded(reflection.id)}
+                                      className="text-[#252E4B] hover:text-[#252E4B]/80 text-xs font-medium mt-1"
+                                    >
+                                      {expandedReflections.has(reflection.id) ? 'Show less' : 'Show more'}
+                                    </button>
+                                  )}
+                                </div>
+                                <div>
+                                  <div className={`whitespace-pre-wrap break-words overflow-hidden ${!expandedReflections.has(reflection.id) ? 'max-h-[3rem] line-clamp-2' : ''}`}>
+                                    <p className="text-sm text-gray-600">{reflection.learning}</p>
+                                  </div>
+                                  {reflection.learning.length > 200 && (
+                                    <button 
+                                      onClick={() => toggleReflectionExpanded(reflection.id)}
+                                      className="text-[#252E4B] hover:text-[#252E4B]/80 text-xs font-medium mt-1"
+                                    >
+                                      {expandedReflections.has(reflection.id) ? 'Show less' : 'Show more'}
+                                    </button>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
