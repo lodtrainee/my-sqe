@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { addReflection, addPeriod, updateReflection, load, deleteReflection, deletePeriod, AppData, placementsCount } from "@/lib/store";
 import { HighLevelArea, LowLevelCompetency, HIGH_TO_LOW, COMPETENCY_DESCRIPTIONS, LOW_LEVEL_DESCRIPTIONS } from "@/lib/types";
+import { exportQwePeriodToPDF, generateSignOffEmail } from "@/lib/export";
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
@@ -672,7 +673,16 @@ export default function PeriodsPage() {
                   >
                     + Add Reflection
                   </button>
-                  <button className="btn btn-black clickable text-lg px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                  <button 
+                    className="btn btn-black clickable text-lg px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                    onClick={() => exportQwePeriodToPDF(p)}
+                  >
+                    Export PDF
+                  </button>
+                  <button 
+                    className="btn btn-black clickable text-lg px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                    onClick={() => generateSignOffEmail(p)}
+                  >
                     Generate Sign-off Email
                   </button>
                   <button 
