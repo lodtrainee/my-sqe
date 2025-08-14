@@ -396,27 +396,19 @@ export default function ReflectionsPage() {
                                           {new Date(reflection.loggedOn).toLocaleDateString()}
                                         </span>
                                       </div>
-                                      <div className="mb-2 w-full">
-                                        <div className={`text-sm text-gray-700 break-words ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
-                                          {reflection.activity}
-                                        </div>
-                                        {reflection.activity.length > 200 && (
-                                          <button 
-                                            onClick={() => toggleReflectionExpanded(reflection.id)}
-                                            className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-1"
-                                          >
-                                            {expandedReflections.has(reflection.id) ? 'Show less' : 'Show more'}
-                                          </button>
-                                        )}
-                                      </div>
                                       <div className="w-full">
-                                        <div className={`text-sm text-gray-600 break-words ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
-                                          {reflection.learning}
+                                        <div className={`text-sm break-words ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
+                                          <div className="text-gray-700 mb-1">
+                                            <span className="font-medium">What did you do:</span> {reflection.activity}
+                                          </div>
+                                          <div className="text-gray-600">
+                                            <span className="font-medium">What did you learn:</span> {reflection.learning}
+                                          </div>
                                         </div>
-                                        {reflection.learning.length > 200 && (
+                                        {(reflection.activity.length > 200 || reflection.learning.length > 200) && (
                                           <button 
                                             onClick={() => toggleReflectionExpanded(reflection.id)}
-                                            className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-1"
+                                            className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-2"
                                           >
                                             {expandedReflections.has(reflection.id) ? 'Show less' : 'Show more'}
                                           </button>
@@ -449,27 +441,19 @@ export default function ReflectionsPage() {
                                     {new Date(reflection.loggedOn).toLocaleDateString()}
                                   </span>
                                 </div>
-                                <div className="mb-2 w-full">
-                                  <div className={`text-sm text-gray-700 break-words ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
-                                    {reflection.activity}
-                                  </div>
-                                  {reflection.activity.length > 200 && (
-                                    <button 
-                                      onClick={() => toggleReflectionExpanded(reflection.id)}
-                                      className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-1"
-                                    >
-                                      {expandedReflections.has(reflection.id) ? 'Show less' : 'Show more'}
-                                    </button>
-                                  )}
-                                </div>
                                 <div className="w-full">
-                                  <div className={`text-sm text-gray-600 break-words ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
-                                    {reflection.learning}
+                                  <div className={`text-sm break-words ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
+                                    <div className="text-gray-700 mb-1">
+                                      <span className="font-medium">What did you do:</span> {reflection.activity}
+                                    </div>
+                                    <div className="text-gray-600">
+                                      <span className="font-medium">What did you learn:</span> {reflection.learning}
+                                    </div>
                                   </div>
-                                  {reflection.learning.length > 200 && (
+                                  {(reflection.activity.length > 200 || reflection.learning.length > 200) && (
                                     <button 
                                       onClick={() => toggleReflectionExpanded(reflection.id)}
-                                      className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-1"
+                                      className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-2"
                                     >
                                       {expandedReflections.has(reflection.id) ? 'Show less' : 'Show more'}
                                     </button>
