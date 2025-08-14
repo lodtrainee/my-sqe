@@ -861,7 +861,7 @@ export default function PeriodsPage() {
                               {r.activity.length > 200 && (
                                 <button 
                                   onClick={() => toggleReflectionExpanded(r.id)}
-                                  className="text-[#252E4B] hover:text-[#252E4B]/80 text-xs font-medium mt-2"
+                                  className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-2"
                                 >
                                   {expandedReflections.has(r.id) ? 'Show less' : 'Show more'}
                                 </button>
@@ -875,7 +875,7 @@ export default function PeriodsPage() {
                               {(r.outcome || "").length > 200 && (
                                 <button 
                                   onClick={() => toggleReflectionExpanded(r.id)}
-                                  className="text-[#252E4B] hover:text-[#252E4B]/80 text-xs font-medium mt-2"
+                                  className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-2"
                                 >
                                   {expandedReflections.has(r.id) ? 'Show less' : 'Show more'}
                                 </button>
@@ -889,7 +889,7 @@ export default function PeriodsPage() {
                               {r.learning.length > 200 && (
                                 <button 
                                   onClick={() => toggleReflectionExpanded(r.id)}
-                                  className="text-[#252E4B] hover:text-[#252E4B]/80 text-xs font-medium mt-2"
+                                  className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-2"
                                 >
                                   {expandedReflections.has(r.id) ? 'Show less' : 'Show more'}
                                 </button>

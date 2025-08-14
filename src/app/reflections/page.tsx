@@ -403,7 +403,7 @@ export default function ReflectionsPage() {
                                         {reflection.activity.length > 200 && (
                                           <button 
                                             onClick={() => toggleReflectionExpanded(reflection.id)}
-                                            className="text-[#252E4B] hover:text-[#252E4B]/80 text-xs font-medium mt-1"
+                                            className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-1"
                                           >
                                             {expandedReflections.has(reflection.id) ? 'Show less' : 'Show more'}
                                           </button>
@@ -416,7 +416,7 @@ export default function ReflectionsPage() {
                                         {reflection.learning.length > 200 && (
                                           <button 
                                             onClick={() => toggleReflectionExpanded(reflection.id)}
-                                            className="text-[#252E4B] hover:text-[#252E4B]/80 text-xs font-medium mt-1"
+                                            className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-1"
                                           >
                                             {expandedReflections.has(reflection.id) ? 'Show less' : 'Show more'}
                                           </button>
@@ -456,7 +456,7 @@ export default function ReflectionsPage() {
                                   {reflection.activity.length > 200 && (
                                     <button 
                                       onClick={() => toggleReflectionExpanded(reflection.id)}
-                                      className="text-[#252E4B] hover:text-[#252E4B]/80 text-xs font-medium mt-1"
+                                      className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-1"
                                     >
                                       {expandedReflections.has(reflection.id) ? 'Show less' : 'Show more'}
                                     </button>
@@ -469,7 +469,7 @@ export default function ReflectionsPage() {
                                   {reflection.learning.length > 200 && (
                                     <button 
                                       onClick={() => toggleReflectionExpanded(reflection.id)}
-                                      className="text-[#252E4B] hover:text-[#252E4B]/80 text-xs font-medium mt-1"
+                                      className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-1"
                                     >
                                       {expandedReflections.has(reflection.id) ? 'Show less' : 'Show more'}
                                     </button>
