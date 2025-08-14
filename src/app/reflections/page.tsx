@@ -401,11 +401,14 @@ export default function ReflectionsPage() {
                                           <div className="text-gray-700 mb-1">
                                             <span className="font-medium">What did you do:</span> {reflection.activity}
                                           </div>
+                                          <div className="text-gray-600 mb-1">
+                                            <span className="font-medium">What was the outcome:</span> {reflection.outcome || "Not specified"}
+                                          </div>
                                           <div className="text-gray-600">
                                             <span className="font-medium">What did you learn:</span> {reflection.learning}
                                           </div>
                                         </div>
-                                        {(reflection.activity.length > 200 || reflection.learning.length > 200) && (
+                                        {(reflection.activity.length > 200 || reflection.outcome?.length > 200 || reflection.learning.length > 200) && (
                                           <button 
                                             onClick={() => toggleReflectionExpanded(reflection.id)}
                                             className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-2"
@@ -446,11 +449,14 @@ export default function ReflectionsPage() {
                                     <div className="text-gray-700 mb-1">
                                       <span className="font-medium">What did you do:</span> {reflection.activity}
                                     </div>
+                                    <div className="text-gray-600 mb-1">
+                                      <span className="font-medium">What was the outcome:</span> {reflection.outcome || "Not specified"}
+                                    </div>
                                     <div className="text-gray-600">
                                       <span className="font-medium">What did you learn:</span> {reflection.learning}
                                     </div>
                                   </div>
-                                  {(reflection.activity.length > 200 || reflection.learning.length > 200) && (
+                                  {(reflection.activity.length > 200 || reflection.outcome?.length > 200 || reflection.learning.length > 200) && (
                                     <button 
                                       onClick={() => toggleReflectionExpanded(reflection.id)}
                                       className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-2"
