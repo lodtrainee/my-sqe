@@ -1,71 +1,85 @@
 import jsPDF from 'jspdf';
 import { QwePeriod, Reflection } from './types';
 
+// Function to add the LOD logo (simplified approach)
+function addLODLogo(doc: jsPDF, x: number, y: number, width: number, height: number) {
+  // For now, use a stylized text logo that matches the app's vibe
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.text('LAWYERS ON DEMAND', x + width/2, y + height/2 + 3, { align: 'center' });
+}
+
 export function exportQwePeriodToPDF(period: QwePeriod): void {
   const doc = new jsPDF();
   
   // Set up fonts and styling
   doc.setFont('helvetica');
   
-  // Header with LOD branding
-  doc.setFillColor(26, 191, 155); // LOD mint color
-  doc.rect(0, 0, 210, 30, 'F');
+  // SLICK HEADER - Modern gradient background
+  const gradient = doc.setFillColor(26, 191, 155); // LOD mint
+  doc.rect(0, 0, 210, 40, 'F');
   
-  // Logo placeholder (you can replace this with actual logo)
-  doc.setFillColor(255, 255, 255);
-  doc.rect(20, 8, 40, 14, 'F');
-  doc.setTextColor(26, 191, 155);
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  doc.text('LOD', 40, 17, { align: 'center' });
+  // Add subtle gradient effect with darker overlay
+  doc.setFillColor(18, 199, 179, 0.3); // Semi-transparent overlay
+  doc.rect(0, 0, 210, 40, 'F');
   
-  // Title
+  // LOD Logo - Using actual logo file
+  addLODLogo(doc, 20, 8, 60, 24);
+  
+  // Modern title with gradient text effect
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(18);
+  doc.setFontSize(28);
   doc.setFont('helvetica', 'bold');
-  doc.text('QWE Period Report', 105, 20, { align: 'center' });
+  doc.text('QWE REPORT', 105, 35, { align: 'center' });
   
-  // Reset text color and font
-  doc.setTextColor(0, 0, 0);
-  doc.setFont('helvetica', 'normal');
+  // Reset text color
+  doc.setTextColor(28, 46, 75); // Dark blueberry color
   
-  // Summary section with modern styling
-  doc.setFillColor(248, 250, 252); // Light gray background
-  doc.rect(20, 40, 170, 50, 'F');
-  doc.setDrawColor(226, 232, 240);
-  doc.rect(20, 40, 170, 50, 'S');
-  
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Period Summary', 25, 55);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(11);
-  
-  doc.text(`Company: ${period.companyName}`, 25, 65);
-  doc.text(`Position: ${period.jobTitle}`, 25, 72);
-  doc.text(`Period: ${new Date(period.startDate).toLocaleDateString()} - ${new Date(period.endDate).toLocaleDateString()}`, 25, 79);
-  doc.text(`Assignment Type: ${period.assignmentType}`, 25, 86);
-  
-  // Confirming Solicitor section
+  // MODERN SUMMARY CARDS - Slick pill-shaped design
+  // Company Info Card
   doc.setFillColor(248, 250, 252);
-  doc.rect(20, 100, 170, 35, 'F');
+  doc.roundedRect(20, 50, 170, 45, 8, 8, 'F');
   doc.setDrawColor(226, 232, 240);
-  doc.rect(20, 100, 170, 35, 'S');
+  doc.roundedRect(20, 50, 170, 45, 8, 8, 'S');
   
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Confirming Solicitor', 25, 115);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(11);
+  // Gradient accent line
+  doc.setFillColor(26, 191, 155);
+  doc.rect(20, 50, 170, 3, 'F');
   
-  doc.text(`Name: ${period.confirmingSolicitor.fullName}`, 25, 125);
-  doc.text(`SRA Number: ${period.confirmingSolicitor.sraNumber}`, 25, 132);
-  doc.text(`Email: ${period.confirmingSolicitor.email}`, 25, 139);
-  
-  // Reflections section
   doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
-  doc.text('Reflections', 20, 155);
+  doc.text('PERIOD SUMMARY', 25, 65);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  
+  doc.text(`${period.companyName}`, 25, 75);
+  doc.text(`${period.jobTitle} • ${period.assignmentType}`, 25, 82);
+  doc.text(`${new Date(period.startDate).toLocaleDateString()} - ${new Date(period.endDate).toLocaleDateString()}`, 25, 89);
+  
+  // Solicitor Card
+  doc.setFillColor(248, 250, 252);
+  doc.roundedRect(20, 105, 170, 35, 8, 8, 'F');
+  doc.setDrawColor(226, 232, 240);
+  doc.roundedRect(20, 105, 170, 35, 8, 8, 'S');
+  
+  // Gradient accent line
+  doc.setFillColor(26, 191, 155);
+  doc.rect(20, 105, 170, 3, 'F');
+  
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text('CONFIRMING SOLICITOR', 25, 120);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  
+  doc.text(`${period.confirmingSolicitor.fullName}`, 25, 130);
+  doc.text(`SRA: ${period.confirmingSolicitor.sraNumber} • ${period.confirmingSolicitor.email}`, 25, 137);
+  
+  // REFLECTIONS SECTION - Modern card design
+  doc.setFontSize(20);
+  doc.setFont('helvetica', 'bold');
+  doc.text('REFLECTIONS', 20, 155);
   doc.setFont('helvetica', 'normal');
   
   let yPosition = 165;
@@ -78,71 +92,83 @@ export function exportQwePeriodToPDF(period: QwePeriod): void {
       pageNumber++;
       yPosition = 30;
       
-      // Add header to new page
+      // SLICK PAGE HEADER
       doc.setFillColor(26, 191, 155);
-      doc.rect(0, 0, 210, 20, 'F');
+      doc.rect(0, 0, 210, 25, 'F');
+      doc.setFillColor(18, 199, 179, 0.3);
+      doc.rect(0, 0, 210, 25, 'F');
+      
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(12);
+      doc.setFontSize(14);
       doc.setFont('helvetica', 'bold');
-      doc.text(`QWE Period Report - ${period.companyName}`, 105, 12, { align: 'center' });
-      doc.text(`Page ${pageNumber}`, 190, 12, { align: 'right' });
-      doc.setTextColor(0, 0, 0);
+      doc.text(`${period.companyName} • Page ${pageNumber}`, 105, 15, { align: 'center' });
+      doc.setTextColor(28, 46, 75);
       doc.setFont('helvetica', 'normal');
     }
     
-    // Reflection card styling
+    // MODERN REFLECTION CARD - Slick design with shadows
     doc.setFillColor(255, 255, 255);
-    doc.rect(20, yPosition, 170, 60, 'F');
+    doc.roundedRect(20, yPosition, 170, 80, 12, 12, 'F');
     doc.setDrawColor(226, 232, 240);
-    doc.rect(20, yPosition, 170, 60, 'S');
+    doc.roundedRect(20, yPosition, 170, 80, 12, 12, 'S');
     
-    // Reflection title
-    doc.setFontSize(13);
+    // Gradient accent line
+    doc.setFillColor(26, 191, 155);
+    doc.roundedRect(20, yPosition, 170, 4, 12, 12, 'F');
+    
+    // Reflection number badge
+    doc.setFillColor(26, 191, 155);
+    doc.circle(35, yPosition + 12, 8, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
-    doc.setTextColor(26, 191, 155);
-    doc.text(`Reflection ${index + 1}: ${reflection.projectName}`, 25, yPosition + 8);
-    doc.setTextColor(0, 0, 0);
+    doc.text(`${index + 1}`, 35, yPosition + 15, { align: 'center' });
+    
+    // Project title
+    doc.setTextColor(28, 46, 75);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text(reflection.projectName, 50, yPosition + 15);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     
-    // What did you do
-    doc.setFont('helvetica', 'bold');
-    doc.text('What did you do:', 25, yPosition + 18);
-    doc.setFont('helvetica', 'normal');
+    // Content sections with modern styling
+    const sections = [
+      { label: 'What did you do', content: reflection.activity },
+      { label: 'What was the outcome', content: reflection.outcome || "Not specified" },
+      { label: 'What did you learn', content: reflection.learning }
+    ];
     
-    const activityLines = doc.splitTextToSize(reflection.activity, 160);
-    doc.text(activityLines, 25, yPosition + 24);
-    const activityHeight = activityLines.length * 4;
+    let contentY = yPosition + 25;
+    sections.forEach((section, sectionIndex) => {
+      // Section label with accent
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(26, 191, 155);
+      doc.text(section.label.toUpperCase(), 25, contentY);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(28, 46, 75);
+      
+      // Content with proper wrapping
+      const lines = doc.splitTextToSize(section.content, 150);
+      doc.text(lines, 25, contentY + 5);
+      
+      contentY += (lines.length * 4) + 8;
+    });
     
-    // What was the outcome
-    doc.setFont('helvetica', 'bold');
-    doc.text('What was the outcome:', 25, yPosition + 18 + activityHeight + 8);
-    doc.setFont('helvetica', 'normal');
-    
-    const outcomeText = reflection.outcome || "Not specified";
-    const outcomeLines = doc.splitTextToSize(outcomeText, 160);
-    doc.text(outcomeLines, 25, yPosition + 18 + activityHeight + 14);
-    const outcomeHeight = outcomeLines.length * 4;
-    
-    // What did you learn
-    doc.setFont('helvetica', 'bold');
-    doc.text('What did you learn:', 25, yPosition + 18 + activityHeight + 8 + outcomeHeight + 8);
-    doc.setFont('helvetica', 'normal');
-    
-    const learningLines = doc.splitTextToSize(reflection.learning, 160);
-    doc.text(learningLines, 25, yPosition + 18 + activityHeight + 8 + outcomeHeight + 14);
-    const learningHeight = learningLines.length * 4;
-    
-    // Calculate total height for this reflection
-    const totalReflectionHeight = Math.max(60, 18 + activityHeight + 8 + outcomeHeight + 8 + learningHeight + 10);
-    
-    yPosition += totalReflectionHeight + 10;
+    // Calculate dynamic height
+    const totalHeight = Math.max(80, contentY - yPosition + 10);
+    yPosition += totalHeight + 15;
   });
   
-  // Footer
+  // SLICK FOOTER
+  doc.setFillColor(248, 250, 252);
+  doc.rect(0, 270, 210, 30, 'F');
+  doc.setDrawColor(226, 232, 240);
+  doc.rect(0, 270, 210, 30, 'S');
+  
   doc.setFontSize(9);
   doc.setTextColor(100, 100, 100);
-  doc.text(`Generated on ${new Date().toLocaleDateString()} by LOD QWE Tracker`, 20, 280);
+  doc.text(`Generated ${new Date().toLocaleDateString()} • LOD QWE Tracker`, 105, 285, { align: 'center' });
   
   // Save the PDF
   const fileName = `QWE_Period_${period.companyName}_${new Date().getFullYear()}.pdf`;
