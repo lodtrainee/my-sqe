@@ -16,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} antialiased`}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} antialiased`} suppressHydrationWarning>
         <div className="flex min-h-screen pb-16 sm:pb-0">
           <Sidebar />
           {/* Main content */}

@@ -484,12 +484,38 @@ export default function PeriodsPage() {
               />
             </div>
           </div>
-          <button 
-            className="btn btn-primary clickable text-lg px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 mt-4" 
-            onClick={saveNewPeriod}
-          >
-            {editing ? "Update Period" : "Save Period"}
-          </button>
+          <div className="flex gap-4 mt-6">
+            <button 
+              className="btn btn-primary clickable text-lg px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300" 
+              onClick={saveNewPeriod}
+            >
+              {editing ? "Update Period" : "Save Period"}
+            </button>
+            <button 
+              className="btn btn-outline clickable text-lg px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300" 
+              onClick={() => {
+                setAdding(false);
+                setEditing(null);
+                setValidationErrors([]);
+                // Reset form to original values if editing
+                if (editing) {
+                  setForm({
+                    companyName: "",
+                    jobTitle: "",
+                    startDate: "",
+                    endDate: "",
+                    assignmentType: "",
+                    fullName: "",
+                    email: "",
+                    sraNumber: "",
+                    companySraNumber: ""
+                  });
+                }
+              }}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       )}
 

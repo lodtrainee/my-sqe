@@ -108,7 +108,7 @@ export default function Home() {
           
           {/* Tooltip */}
           <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-50 border border-gray-200 text-[#252E4B] text-xs font-semibold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-10 shadow-lg">
-            Consistency is key! This shows how many reflections you've added this quarter.
+            Consistency is key! This shows how many weeks you've recorded your reflections this quarter.
             <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-50"></div>
           </div>
         </div>
@@ -244,7 +244,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-6 gap-2 sm:gap-3 relative mt-8">
+            <div className="grid grid-cols-6 gap-2 sm:gap-3 relative mt-16">
               {ALL_LOW.map((competency, index) => (
                 <div
                   key={competency}
