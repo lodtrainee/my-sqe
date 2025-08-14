@@ -268,10 +268,20 @@ export default function PeriodsPage() {
       const reflectionFields = new Set(newMap.get(reflectionId) || []);
       
       if (reflectionFields.has(fieldName)) {
-        // If we're collapsing, scroll back to the button position
+        // If we're collapsing, store the button position and scroll after collapse
         const button = document.querySelector(`[data-reflection="${reflectionId}"][data-field="${fieldName}"]`);
         if (button) {
-          button.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          const buttonRect = button.getBoundingClientRect();
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const targetScrollPosition = scrollTop + buttonRect.top - 100; // 100px offset from top
+          
+          // Use setTimeout to scroll after the state update and re-render
+          setTimeout(() => {
+            window.scrollTo({
+              top: targetScrollPosition,
+              behavior: 'smooth'
+            });
+          }, 50);
         }
         reflectionFields.delete(fieldName);
       } else {
