@@ -158,7 +158,9 @@ export default function ReflectionsPage() {
   const toggleExpanded = (competency: string) => {
     const newExpanded = new Set(expandedCompetencies);
     if (newExpanded.has(competency)) {
+      // If we're collapsing a competency section, reset all expanded reflections
       newExpanded.delete(competency);
+      setExpandedReflections(new Set());
     } else {
       newExpanded.add(competency);
     }
