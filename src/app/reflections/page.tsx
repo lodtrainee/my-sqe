@@ -397,8 +397,8 @@ export default function ReflectionsPage() {
                                         </span>
                                       </div>
                                       <div className="mb-2">
-                                        <div className={`whitespace-pre-wrap break-words overflow-hidden ${!expandedReflections.has(reflection.id) ? 'max-h-[3rem] line-clamp-2' : ''}`}>
-                                          <p className="text-sm text-gray-700">{reflection.activity}</p>
+                                        <div className={`text-sm text-gray-700 reflection-text-container ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
+                                          {reflection.activity}
                                         </div>
                                         {reflection.activity.length > 200 && (
                                           <button 
@@ -410,8 +410,8 @@ export default function ReflectionsPage() {
                                         )}
                                       </div>
                                       <div>
-                                        <div className={`whitespace-pre-wrap break-words overflow-hidden ${!expandedReflections.has(reflection.id) ? 'max-h-[3rem] line-clamp-2' : ''}`}>
-                                          <p className="text-sm text-gray-600">{reflection.learning}</p>
+                                        <div className={`text-sm text-gray-600 reflection-text-container ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
+                                          {reflection.learning}
                                         </div>
                                         {reflection.learning.length > 200 && (
                                           <button 
@@ -450,8 +450,8 @@ export default function ReflectionsPage() {
                                   </span>
                                 </div>
                                 <div className="mb-2">
-                                  <div className={`whitespace-pre-wrap break-words overflow-hidden ${!expandedReflections.has(reflection.id) ? 'max-h-[3rem] line-clamp-2' : ''}`}>
-                                    <p className="text-sm text-gray-700">{reflection.activity}</p>
+                                  <div className={`text-sm text-gray-700 reflection-text-container ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
+                                    {reflection.activity}
                                   </div>
                                   {reflection.activity.length > 200 && (
                                     <button 
@@ -463,8 +463,8 @@ export default function ReflectionsPage() {
                                   )}
                                 </div>
                                 <div>
-                                  <div className={`whitespace-pre-wrap break-words overflow-hidden ${!expandedReflections.has(reflection.id) ? 'max-h-[3rem] line-clamp-2' : ''}`}>
-                                    <p className="text-sm text-gray-600">{reflection.learning}</p>
+                                  <div className={`text-sm text-gray-600 reflection-text-container ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
+                                    {reflection.learning}
                                   </div>
                                   {reflection.learning.length > 200 && (
                                     <button 

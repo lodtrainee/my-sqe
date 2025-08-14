@@ -336,6 +336,21 @@ body {
   animation: float 3s ease-in-out infinite;
 }
 
+/* Reflection text overflow handling */
+.reflection-text-container {
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.reflection-text-container.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 
 
 
