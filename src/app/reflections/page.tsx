@@ -398,14 +398,17 @@ export default function ReflectionsPage() {
                                       </div>
                                       <div className="w-full">
                                         <div className={`text-sm break-words ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
-                                          <div className="text-gray-700 mb-1">
-                                            <span className="font-medium">What did you do:</span> {reflection.activity}
+                                          <div className="text-gray-700 mb-2">
+                                            <div className="font-bold text-gray-800 mb-1">What did you do:</div>
+                                            <div>{reflection.activity}</div>
                                           </div>
-                                          <div className="text-gray-600 mb-1">
-                                            <span className="font-medium">What was the outcome:</span> {reflection.outcome || "Not specified"}
+                                          <div className="text-gray-600 mb-2">
+                                            <div className="font-bold text-gray-800 mb-1">What was the outcome:</div>
+                                            <div>{reflection.outcome || "Not specified"}</div>
                                           </div>
                                           <div className="text-gray-600">
-                                            <span className="font-medium">What did you learn:</span> {reflection.learning}
+                                            <div className="font-bold text-gray-800 mb-1">What did you learn:</div>
+                                            <div>{reflection.learning}</div>
                                           </div>
                                         </div>
                                         {(reflection.activity.length > 200 || reflection.outcome?.length > 200 || reflection.learning.length > 200) && (
@@ -446,14 +449,17 @@ export default function ReflectionsPage() {
                                 </div>
                                 <div className="w-full">
                                   <div className={`text-sm break-words ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
-                                    <div className="text-gray-700 mb-1">
-                                      <span className="font-medium">What did you do:</span> {reflection.activity}
+                                    <div className="text-gray-700 mb-2">
+                                      <div className="font-bold text-gray-800 mb-1">What did you do:</div>
+                                      <div>{reflection.activity}</div>
                                     </div>
-                                    <div className="text-gray-600 mb-1">
-                                      <span className="font-medium">What was the outcome:</span> {reflection.outcome || "Not specified"}
+                                    <div className="text-gray-600 mb-2">
+                                      <div className="font-bold text-gray-800 mb-1">What was the outcome:</div>
+                                      <div>{reflection.outcome || "Not specified"}</div>
                                     </div>
                                     <div className="text-gray-600">
-                                      <span className="font-medium">What did you learn:</span> {reflection.learning}
+                                      <div className="font-bold text-gray-800 mb-1">What did you learn:</div>
+                                      <div>{reflection.learning}</div>
                                     </div>
                                   </div>
                                   {(reflection.activity.length > 200 || reflection.outcome?.length > 200 || reflection.learning.length > 200) && (
