@@ -389,15 +389,15 @@ export default function ReflectionsPage() {
                                       onChange={() => toggleReflectionSelection(reflection.id)}
                                       className="mt-1"
                                     />
-                                    <div className="flex-1">
-                                      <div className="flex items-center gap-2 mb-2">
-                                        <span className="font-medium text-gray-900">{reflection.projectName}</span>
-                                        <span className="text-xs text-gray-500">
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex items-center gap-2 mb-2 min-w-0">
+                                        <span className="font-medium text-gray-900 truncate">{reflection.projectName}</span>
+                                        <span className="text-xs text-gray-500 flex-shrink-0">
                                           {new Date(reflection.loggedOn).toLocaleDateString()}
                                         </span>
                                       </div>
-                                      <div className="mb-2">
-                                        <div className={`text-sm text-gray-700 reflection-text-container ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
+                                      <div className="mb-2 w-full">
+                                        <div className={`text-sm text-gray-700 break-words ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
                                           {reflection.activity}
                                         </div>
                                         {reflection.activity.length > 200 && (
@@ -409,8 +409,8 @@ export default function ReflectionsPage() {
                                           </button>
                                         )}
                                       </div>
-                                      <div>
-                                        <div className={`text-sm text-gray-600 reflection-text-container ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
+                                      <div className="w-full">
+                                        <div className={`text-sm text-gray-600 break-words ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
                                           {reflection.learning}
                                         </div>
                                         {reflection.learning.length > 200 && (
@@ -442,15 +442,15 @@ export default function ReflectionsPage() {
                                 onChange={() => toggleReflectionSelection(reflection.id)}
                                 className="mt-1"
                               />
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <span className="font-medium text-gray-900">{reflection.projectName}</span>
-                                  <span className="text-xs text-gray-500">
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-2 min-w-0">
+                                  <span className="font-medium text-gray-900 truncate">{reflection.projectName}</span>
+                                  <span className="text-xs text-gray-500 flex-shrink-0">
                                     {new Date(reflection.loggedOn).toLocaleDateString()}
                                   </span>
                                 </div>
-                                <div className="mb-2">
-                                  <div className={`text-sm text-gray-700 reflection-text-container ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
+                                <div className="mb-2 w-full">
+                                  <div className={`text-sm text-gray-700 break-words ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
                                     {reflection.activity}
                                   </div>
                                   {reflection.activity.length > 200 && (
@@ -462,8 +462,8 @@ export default function ReflectionsPage() {
                                     </button>
                                   )}
                                 </div>
-                                <div>
-                                  <div className={`text-sm text-gray-600 reflection-text-container ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
+                                <div className="w-full">
+                                  <div className={`text-sm text-gray-600 break-words ${!expandedReflections.has(reflection.id) ? 'line-clamp-2' : ''}`}>
                                     {reflection.learning}
                                   </div>
                                   {reflection.learning.length > 200 && (
