@@ -6,98 +6,146 @@ export function exportQwePeriodToPDF(period: QwePeriod): void {
   
   // Set up fonts and styling
   doc.setFont('helvetica');
-  doc.setFontSize(20);
+  
+  // Header with LOD branding
+  doc.setFillColor(26, 191, 155); // LOD mint color
+  doc.rect(0, 0, 210, 30, 'F');
+  
+  // Logo placeholder (you can replace this with actual logo)
+  doc.setFillColor(255, 255, 255);
+  doc.rect(20, 8, 40, 14, 'F');
+  doc.setTextColor(26, 191, 155);
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text('LOD', 40, 17, { align: 'center' });
   
   // Title
-  doc.setFillColor(37, 99, 235); // Blue color
-  doc.rect(20, 20, 170, 10, 'F');
   doc.setTextColor(255, 255, 255);
-  doc.text('QWE Period Report', 105, 27, { align: 'center' });
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.text('QWE Period Report', 105, 20, { align: 'center' });
   
-  // Reset text color
+  // Reset text color and font
   doc.setTextColor(0, 0, 0);
-  doc.setFontSize(12);
+  doc.setFont('helvetica', 'normal');
   
-  // Company Information
+  // Summary section with modern styling
+  doc.setFillColor(248, 250, 252); // Light gray background
+  doc.rect(20, 40, 170, 50, 'F');
+  doc.setDrawColor(226, 232, 240);
+  doc.rect(20, 40, 170, 50, 'S');
+  
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Period Summary', 25, 55);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  
+  doc.text(`Company: ${period.companyName}`, 25, 65);
+  doc.text(`Position: ${period.jobTitle}`, 25, 72);
+  doc.text(`Period: ${new Date(period.startDate).toLocaleDateString()} - ${new Date(period.endDate).toLocaleDateString()}`, 25, 79);
+  doc.text(`Assignment Type: ${period.assignmentType}`, 25, 86);
+  
+  // Confirming Solicitor section
+  doc.setFillColor(248, 250, 252);
+  doc.rect(20, 100, 170, 35, 'F');
+  doc.setDrawColor(226, 232, 240);
+  doc.rect(20, 100, 170, 35, 'S');
+  
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Confirming Solicitor', 25, 115);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  
+  doc.text(`Name: ${period.confirmingSolicitor.fullName}`, 25, 125);
+  doc.text(`SRA Number: ${period.confirmingSolicitor.sraNumber}`, 25, 132);
+  doc.text(`Email: ${period.confirmingSolicitor.email}`, 25, 139);
+  
+  // Reflections section
   doc.setFontSize(16);
-  doc.text('Company Information', 20, 50);
-  doc.setFontSize(12);
-  doc.text(`Company: ${period.companyName}`, 20, 65);
-  doc.text(`Job Title: ${period.jobTitle}`, 20, 75);
-  doc.text(`Start Date: ${new Date(period.startDate).toLocaleDateString()}`, 20, 85);
-  doc.text(`End Date: ${new Date(period.endDate).toLocaleDateString()}`, 20, 95);
-  doc.text(`Assignment Type: ${period.assignmentType}`, 20, 105);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Reflections', 20, 155);
+  doc.setFont('helvetica', 'normal');
   
-  // Confirming Solicitor Information
-  doc.setFontSize(16);
-  doc.text('Confirming Solicitor', 20, 125);
-  doc.setFontSize(12);
-  doc.text(`Name: ${period.confirmingSolicitor.fullName}`, 20, 140);
-  doc.text(`SRA Number: ${period.confirmingSolicitor.sraNumber}`, 20, 150);
-  doc.text(`Email: ${period.confirmingSolicitor.email}`, 20, 160);
+  let yPosition = 165;
+  let pageNumber = 1;
   
-  // Reflections
-  doc.setFontSize(16);
-  doc.text('Reflections', 20, 180);
-  doc.setFontSize(12);
-  
-  let yPosition = 195;
   period.reflections.forEach((reflection, index) => {
     // Check if we need a new page
     if (yPosition > 250) {
       doc.addPage();
-      yPosition = 20;
+      pageNumber++;
+      yPosition = 30;
+      
+      // Add header to new page
+      doc.setFillColor(26, 191, 155);
+      doc.rect(0, 0, 210, 20, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`QWE Period Report - ${period.companyName}`, 105, 12, { align: 'center' });
+      doc.text(`Page ${pageNumber}`, 190, 12, { align: 'right' });
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('helvetica', 'normal');
     }
     
-    doc.setFontSize(14);
-    doc.text(`Reflection ${index + 1}: ${reflection.projectName}`, 20, yPosition);
-    doc.setFontSize(10);
-    yPosition += 10;
+    // Reflection card styling
+    doc.setFillColor(255, 255, 255);
+    doc.rect(20, yPosition, 170, 60, 'F');
+    doc.setDrawColor(226, 232, 240);
+    doc.rect(20, yPosition, 170, 60, 'S');
     
-    doc.setFontSize(11);
-    doc.text('What did you do:', 20, yPosition);
+    // Reflection title
+    doc.setFontSize(13);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(26, 191, 155);
+    doc.text(`Reflection ${index + 1}: ${reflection.projectName}`, 25, yPosition + 8);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    yPosition += 7;
     
-    // Split long text into multiple lines
-    const activityLines = doc.splitTextToSize(reflection.activity, 170);
-    doc.text(activityLines, 20, yPosition);
-    yPosition += (activityLines.length * 5) + 5;
+    // What did you do
+    doc.setFont('helvetica', 'bold');
+    doc.text('What did you do:', 25, yPosition + 18);
+    doc.setFont('helvetica', 'normal');
     
-    doc.setFontSize(11);
-    doc.text('What was the outcome:', 20, yPosition);
-    doc.setFontSize(10);
-    yPosition += 7;
+    const activityLines = doc.splitTextToSize(reflection.activity, 160);
+    doc.text(activityLines, 25, yPosition + 24);
+    const activityHeight = activityLines.length * 4;
+    
+    // What was the outcome
+    doc.setFont('helvetica', 'bold');
+    doc.text('What was the outcome:', 25, yPosition + 18 + activityHeight + 8);
+    doc.setFont('helvetica', 'normal');
     
     const outcomeText = reflection.outcome || "Not specified";
-    const outcomeLines = doc.splitTextToSize(outcomeText, 170);
-    doc.text(outcomeLines, 20, yPosition);
-    yPosition += (outcomeLines.length * 5) + 5;
+    const outcomeLines = doc.splitTextToSize(outcomeText, 160);
+    doc.text(outcomeLines, 25, yPosition + 18 + activityHeight + 14);
+    const outcomeHeight = outcomeLines.length * 4;
     
-    doc.setFontSize(11);
-    doc.text('What did you learn:', 20, yPosition);
-    doc.setFontSize(10);
-    yPosition += 7;
+    // What did you learn
+    doc.setFont('helvetica', 'bold');
+    doc.text('What did you learn:', 25, yPosition + 18 + activityHeight + 8 + outcomeHeight + 8);
+    doc.setFont('helvetica', 'normal');
     
-    const learningLines = doc.splitTextToSize(reflection.learning, 170);
-    doc.text(learningLines, 20, yPosition);
-    yPosition += (learningLines.length * 5) + 10;
+    const learningLines = doc.splitTextToSize(reflection.learning, 160);
+    doc.text(learningLines, 25, yPosition + 18 + activityHeight + 8 + outcomeHeight + 14);
+    const learningHeight = learningLines.length * 4;
     
-    // Add separator line
-    if (index < period.reflections.length - 1) {
-      doc.setDrawColor(200, 200, 200);
-      doc.line(20, yPosition, 190, yPosition);
-      yPosition += 10;
-    }
+    // Calculate total height for this reflection
+    const totalReflectionHeight = Math.max(60, 18 + activityHeight + 8 + outcomeHeight + 8 + learningHeight + 10);
+    
+    yPosition += totalReflectionHeight + 10;
   });
   
   // Footer
-  doc.setFontSize(10);
+  doc.setFontSize(9);
   doc.setTextColor(100, 100, 100);
-  doc.text(`Generated on ${new Date().toLocaleDateString()}`, 20, 280);
+  doc.text(`Generated on ${new Date().toLocaleDateString()} by LOD QWE Tracker`, 20, 280);
   
   // Save the PDF
-  const fileName = `QWE_Period_${period.companyName}_${new Date(period.startDate).getFullYear()}.pdf`;
+  const fileName = `QWE_Period_${period.companyName}_${new Date().getFullYear()}.pdf`;
   doc.save(fileName);
 }
 
