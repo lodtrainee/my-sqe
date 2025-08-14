@@ -268,6 +268,11 @@ export default function PeriodsPage() {
       const reflectionFields = new Set(newMap.get(reflectionId) || []);
       
       if (reflectionFields.has(fieldName)) {
+        // If we're collapsing, scroll back to the button position
+        const button = document.querySelector(`[data-reflection="${reflectionId}"][data-field="${fieldName}"]`);
+        if (button) {
+          button.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
         reflectionFields.delete(fieldName);
       } else {
         reflectionFields.add(fieldName);
@@ -884,6 +889,8 @@ export default function PeriodsPage() {
                                 <button 
                                   onClick={() => toggleFieldExpanded(r.id, 'activity')}
                                   className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-2"
+                                  data-reflection={r.id}
+                                  data-field="activity"
                                 >
                                   {expandedFields.get(r.id)?.has('activity') ? 'Show less' : 'Show more'}
                                 </button>
@@ -898,6 +905,8 @@ export default function PeriodsPage() {
                                 <button 
                                   onClick={() => toggleFieldExpanded(r.id, 'outcome')}
                                   className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-2"
+                                  data-reflection={r.id}
+                                  data-field="outcome"
                                 >
                                   {expandedFields.get(r.id)?.has('outcome') ? 'Show less' : 'Show more'}
                                 </button>
@@ -912,6 +921,8 @@ export default function PeriodsPage() {
                                 <button 
                                   onClick={() => toggleFieldExpanded(r.id, 'learning')}
                                   className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-2"
+                                  data-reflection={r.id}
+                                  data-field="learning"
                                 >
                                   {expandedFields.get(r.id)?.has('learning') ? 'Show less' : 'Show more'}
                                 </button>
