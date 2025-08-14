@@ -20,6 +20,7 @@ export default function PeriodsPage() {
   const [editingReflection, setEditingReflection] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [expandedReflections, setExpandedReflections] = useState<Set<string>>(new Set());
+  const [expandedFields, setExpandedFields] = useState<Map<string, Set<string>>>(new Map());
   const [reflectionForm, setReflectionForm] = useState({
     highLevelAreas: [] as HighLevelArea[],
     lowLevelCompetencies: [] as LowLevelCompetency[],
@@ -258,6 +259,27 @@ export default function PeriodsPage() {
         newSet.add(reflectionId);
       }
       return newSet;
+    });
+  }
+
+  function toggleFieldExpanded(reflectionId: string, fieldName: string) {
+    setExpandedFields(prev => {
+      const newMap = new Map(prev);
+      const reflectionFields = new Set(newMap.get(reflectionId) || []);
+      
+      if (reflectionFields.has(fieldName)) {
+        reflectionFields.delete(fieldName);
+      } else {
+        reflectionFields.add(fieldName);
+      }
+      
+      if (reflectionFields.size === 0) {
+        newMap.delete(reflectionId);
+      } else {
+        newMap.set(reflectionId, reflectionFields);
+      }
+      
+      return newMap;
     });
   }
 
@@ -855,43 +877,43 @@ export default function PeriodsPage() {
                           <>
                             <div className="bg-[color:var(--muted)] rounded-xl p-4 text-sm mb-4 border border-gray-200">
                               <div className="font-semibold mb-2">What did you do?</div>
-                              <div className={`whitespace-pre-wrap break-words overflow-hidden ${!expandedReflections.has(r.id) ? 'max-h-[3rem] line-clamp-2' : ''}`}>
+                              <div className={`whitespace-pre-wrap break-words overflow-hidden ${!expandedFields.get(r.id)?.has('activity') ? 'max-h-[3rem] line-clamp-2' : ''}`}>
                                 {r.activity}
                               </div>
                               {r.activity.length > 200 && (
                                 <button 
-                                  onClick={() => toggleReflectionExpanded(r.id)}
+                                  onClick={() => toggleFieldExpanded(r.id, 'activity')}
                                   className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-2"
                                 >
-                                  {expandedReflections.has(r.id) ? 'Show less' : 'Show more'}
+                                  {expandedFields.get(r.id)?.has('activity') ? 'Show less' : 'Show more'}
                                 </button>
                               )}
                             </div>
                             <div className="bg-[color:var(--muted)] rounded-xl p-4 text-sm mb-4 border border-gray-200">
                               <div className="font-semibold mb-2">What was the outcome?</div>
-                              <div className={`whitespace-pre-wrap break-words overflow-hidden ${!expandedReflections.has(r.id) ? 'max-h-[3rem] line-clamp-2' : ''}`}>
+                              <div className={`whitespace-pre-wrap break-words overflow-hidden ${!expandedFields.get(r.id)?.has('outcome') ? 'max-h-[3rem] line-clamp-2' : ''}`}>
                                 {r.outcome || "Not specified"}
                               </div>
                               {(r.outcome || "").length > 200 && (
                                 <button 
-                                  onClick={() => toggleReflectionExpanded(r.id)}
+                                  onClick={() => toggleFieldExpanded(r.id, 'outcome')}
                                   className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-2"
                                 >
-                                  {expandedReflections.has(r.id) ? 'Show less' : 'Show more'}
+                                  {expandedFields.get(r.id)?.has('outcome') ? 'Show less' : 'Show more'}
                                 </button>
                               )}
                             </div>
                             <div className="bg-[color:var(--muted)] rounded-xl p-4 text-sm border border-gray-200">
                               <div className="font-semibold mb-2">What did you learn?</div>
-                              <div className={`whitespace-pre-wrap break-words overflow-hidden ${!expandedReflections.has(r.id) ? 'max-h-[3rem] line-clamp-2' : ''}`}>
+                              <div className={`whitespace-pre-wrap break-words overflow-hidden ${!expandedFields.get(r.id)?.has('learning') ? 'max-h-[3rem] line-clamp-2' : ''}`}>
                                 {r.learning}
                               </div>
                               {r.learning.length > 200 && (
                                 <button 
-                                  onClick={() => toggleReflectionExpanded(r.id)}
+                                  onClick={() => toggleFieldExpanded(r.id, 'learning')}
                                   className="text-[color:var(--brand-teal)] hover:text-[color:var(--brand-teal)]/80 text-xs font-medium mt-2"
                                 >
-                                  {expandedReflections.has(r.id) ? 'Show less' : 'Show more'}
+                                  {expandedFields.get(r.id)?.has('learning') ? 'Show less' : 'Show more'}
                                 </button>
                               )}
                             </div>
