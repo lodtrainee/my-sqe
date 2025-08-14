@@ -86,64 +86,9 @@ body {
 
 .clickable {
   cursor: pointer;
-  transition: var(--transition-fast);
-  will-change: transform, opacity, background-color, box-shadow;
-}
-.clickable:active {
-  transform: scale(0.98);
 }
 
-/* Smooth page transitions */
-.page-transition {
-  transition: var(--transition-normal);
-}
-
-/* Fade in animation for content */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.fade-in-up {
-  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Stagger animation for dials */
-.dial-stagger {
-  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  animation-fill-mode: both;
-}
-
-.dial-stagger:nth-child(1) { animation-delay: 0.1s; }
-.dial-stagger:nth-child(2) { animation-delay: 0.15s; }
-.dial-stagger:nth-child(3) { animation-delay: 0.2s; }
-.dial-stagger:nth-child(4) { animation-delay: 0.25s; }
-.dial-stagger:nth-child(5) { animation-delay: 0.3s; }
-.dial-stagger:nth-child(6) { animation-delay: 0.35s; }
-.dial-stagger:nth-child(7) { animation-delay: 0.4s; }
-.dial-stagger:nth-child(8) { animation-delay: 0.45s; }
-.dial-stagger:nth-child(9) { animation-delay: 0.5s; }
-.dial-stagger:nth-child(10) { animation-delay: 0.55s; }
-.dial-stagger:nth-child(11) { animation-delay: 0.6s; }
-.dial-stagger:nth-child(12) { animation-delay: 0.65s; }
-.dial-stagger:nth-child(13) { animation-delay: 0.7s; }
-.dial-stagger:nth-child(14) { animation-delay: 0.75s; }
-.dial-stagger:nth-child(15) { animation-delay: 0.8s; }
+/* Removed animations to prevent glitch */
 
 /* Typography */
 .display-title {
@@ -165,7 +110,6 @@ body {
   border-radius: var(--border-radius-md);
   padding: 12px 18px;
   font-weight: 600;
-  transition: var(--transition-fast);
   border: none;
 }
 .btn-primary {
@@ -176,7 +120,6 @@ body {
 .btn-primary:hover { 
   opacity: 0.95; 
   box-shadow: var(--shadow-lg);
-  transform: translateY(-1px);
 }
 .btn-black {
   background: linear-gradient(135deg, #1c2640 0%, #2d3748 100%);

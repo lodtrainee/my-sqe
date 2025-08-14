@@ -2,209 +2,217 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { AppData } from '@/lib/types';
-import { generateQWESummary, generateReflectionsSummary, generateEmailTemplate, downloadAsPDF, openEmailClient } from '@/lib/export';
+import Link from 'next/link';
 
 export default function ExportPage() {
-  const [data, setData] = useState<AppData | null>(null);
-  const [includeReflections, setIncludeReflections] = useState(true);
-  const [solicitorDetails, setSolicitorDetails] = useState({
-    name: '',
-    sraNumber: '',
-    email: ''
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  const [data, setData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userName, setUserName] = useState('');
+  const [showEmailForm, setShowEmailForm] = useState(false);
 
   useEffect(() => {
-    const savedData = localStorage.getItem('appData');
-    if (savedData) {
-      setData(JSON.parse(savedData));
-    }
+    const loadData = () => {
+      try {
+        const storedData = localStorage.getItem('appData');
+        if (storedData) {
+          setData(JSON.parse(storedData));
+        }
+      } catch (error) {
+        console.error('Error loading data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
   }, []);
 
-  if (!data) {
+  const handleExportPDF = async () => {
+    // Temporarily disabled
+    alert('PDF Export is temporarily disabled. Please check back later.');
+  };
+
+  const generateEmailTemplate = () => {
+    if (!data || !data.qwePeriods || data.qwePeriods.length === 0) {
+      alert('No QWE periods found. Please add some periods first.');
+      return;
+    }
+
+    if (!userName.trim()) {
+      alert('Please enter your name.');
+      return;
+    }
+
+    const periodsList = data.qwePeriods.map((period: any) => {
+      const startDate = new Date(period.startDate).toLocaleDateString('en-GB');
+      const endDate = new Date(period.endDate).toLocaleDateString('en-GB');
+      return `• **${period.companyName}**: ${period.jobTitle}, ${startDate} - ${endDate}`;
+    }).join('\n');
+
+    const emailBody = `Hi Lottie,
+
+I hope you're well.
+
+I am writing to request sign-off for my QWE period for the following:
+
+${periodsList}
+
+You will find my journal entries for each assignment attached.
+
+Many thanks,
+${userName}`;
+
+    const emailSubject = 'QWE Sign-off Request - LOD Assignments';
+
+    // Create mailto link
+    const mailtoLink = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+    
+    // Open email client
+    window.open(mailtoLink);
+  };
+
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading your QWE data...</p>
-          </div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
         </div>
       </div>
     );
   }
 
-  const handleExportPDF = () => {
-    setIsLoading(true);
-    
-    try {
-      let content = generateQWESummary(data);
-      if (includeReflections) {
-        content += generateReflectionsSummary(data);
-      }
-      
-      const filename = `QWE_Report_${new Date().toISOString().split('T')[0]}.txt`;
-      downloadAsPDF(content, filename);
-    } catch (error) {
-      console.error('Export failed:', error);
-      alert('Export failed. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  if (!data) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">No Data Found</h1>
+          <p className="text-gray-600">Please add some QWE periods and reflections first.</p>
+          <Link href="/" className="mt-4 inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+            Go to Dashboard
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
-  const handleEmailSignOff = () => {
-    if (!solicitorDetails.name || !solicitorDetails.email) {
-      alert('Please fill in the solicitor details.');
-      return;
-    }
+  const totalMonths = data.qwePeriods ? data.qwePeriods.reduce((total: number, period: any) => {
+    return total + (period.duration || 0);
+  }, 0) : 0;
 
-    try {
-      const { subject, body } = generateEmailTemplate(data, solicitorDetails);
-      openEmailClient(subject, body);
-    } catch (error) {
-      console.error('Email generation failed:', error);
-      alert('Email generation failed. Please try again.');
-    }
-  };
-
-  const totalMonths = data.periods.reduce((total, period) => {
-    const start = new Date(period.startDate);
-    const end = new Date(period.endDate);
-    const months = (end.getFullYear() - start.getFullYear()) * 12 + 
-                   (end.getMonth() - start.getMonth()) + 1;
-    return total + months;
-  }, 0);
+  const totalReflections = data.qwePeriods ? data.qwePeriods.reduce((total: number, period: any) => {
+    return total + (period.reflections ? period.reflections.length : 0);
+  }, 0) : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <button 
-            onClick={() => router.back()}
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-4 transition-colors"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Back
-          </button>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Export QWE</h1>
-          <p className="text-gray-600">Generate reports and request solicitor sign-off</p>
-        </div>
-
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="text-2xl font-bold text-blue-600 mb-1">{data.periods.length}</div>
-            <div className="text-gray-600">QWE Periods</div>
-          </div>
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="text-2xl font-bold text-green-600 mb-1">{totalMonths}</div>
-            <div className="text-gray-600">Total Months</div>
-          </div>
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="text-2xl font-bold text-purple-600 mb-1">{data.reflections.length}</div>
-            <div className="text-gray-600">Reflections</div>
-          </div>
-        </div>
-
-        {/* Export Options */}
-        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-200 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Export Options</h2>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-4xl mx-auto py-8 px-4">
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-8">Export QWE Report</h1>
           
-          <div className="space-y-6">
-            {/* PDF Export */}
-            <div className="border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Download QWE Report</h3>
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="includeReflections"
-                    checked={includeReflections}
-                    onChange={(e) => setIncludeReflections(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="includeReflections" className="ml-2 text-gray-700">
-                    Include reflections in the report
-                  </label>
-                </div>
-                <button
-                  onClick={handleExportPDF}
-                  disabled={isLoading}
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {isLoading ? 'Generating...' : 'Download PDF Report'}
-                </button>
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Summary</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <p className="text-sm text-blue-600 font-medium">Total Periods</p>
+                <p className="text-2xl font-bold text-blue-900">{data.qwePeriods ? data.qwePeriods.length : 0}</p>
               </div>
-            </div>
-
-            {/* Email Sign-off */}
-            <div className="border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Request Solicitor Sign-off</h3>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Solicitor Name *
-                    </label>
-                    <input
-                      type="text"
-                      value={solicitorDetails.name}
-                      onChange={(e) => setSolicitorDetails(prev => ({ ...prev, name: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Enter solicitor name"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      SRA Number
-                    </label>
-                    <input
-                      type="text"
-                      value={solicitorDetails.sraNumber}
-                      onChange={(e) => setSolicitorDetails(prev => ({ ...prev, sraNumber: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Enter SRA number"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    value={solicitorDetails.email}
-                    onChange={(e) => setSolicitorDetails(prev => ({ ...prev, email: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter email address"
-                  />
-                </div>
-                <button
-                  onClick={handleEmailSignOff}
-                  disabled={!solicitorDetails.name || !solicitorDetails.email}
-                  className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  Generate Email Template
-                </button>
+              <div className="bg-green-50 p-4 rounded-lg">
+                <p className="text-sm text-green-600 font-medium">Total Months</p>
+                <p className="text-2xl font-bold text-green-900">{totalMonths}</p>
+              </div>
+              <div className="bg-purple-50 p-4 rounded-lg">
+                <p className="text-sm text-purple-600 font-medium">Total Reflections</p>
+                <p className="text-2xl font-bold text-purple-900">{totalReflections}</p>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Preview */}
-        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Report Preview</h2>
-          <div className="bg-gray-50 rounded-lg p-6 max-h-96 overflow-y-auto">
-            <pre className="text-sm text-gray-700 whitespace-pre-wrap">
-              {generateQWESummary(data)}
-              {includeReflections && generateReflectionsSummary(data)}
-            </pre>
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Export Options</h2>
+            
+            <div className="space-y-4">
+              <button
+                onClick={handleExportPDF}
+                disabled={true}
+                className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-medium cursor-not-allowed opacity-50"
+              >
+                Download Comprehensive PDF Report
+              </button>
+
+              <button
+                onClick={() => setShowEmailForm(!showEmailForm)}
+                className="w-full bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700"
+              >
+                Generate Email Sign-off Request
+              </button>
+            </div>
+
+            {showEmailForm && (
+              <div className="mt-6 p-6 bg-gray-50 rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Email Sign-off Request</h3>
+                
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Your Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                    placeholder="Enter your full name"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">QWE Periods to Include:</h4>
+                  <div className="space-y-2">
+                    {data.qwePeriods && data.qwePeriods.map((period: any, index: number) => (
+                      <div key={index} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          defaultChecked={true}
+                          className="mr-3"
+                        />
+                        <span className="text-sm text-gray-600">
+                          {period.companyName} - {period.jobTitle} ({new Date(period.startDate).toLocaleDateString('en-GB')} - {new Date(period.endDate).toLocaleDateString('en-GB')})
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  onClick={generateEmailTemplate}
+                  className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700"
+                >
+                  Generate Email
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Report Preview</h2>
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <p className="text-gray-600 mb-4">
+                The comprehensive PDF report will include:
+              </p>
+              <ul className="list-disc list-inside text-gray-600 space-y-2">
+                <li>Professional header with LOD branding</li>
+                <li>Summary statistics and competency coverage</li>
+                <li>Detailed QWE periods with all reflections</li>
+                <li>High-level and low-level competency descriptions</li>
+                <li>Clean, modern formatting suitable for professional use</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <Link href="/" className="text-blue-600 hover:text-blue-800 font-medium">
+              ← Back to Dashboard
+            </Link>
           </div>
         </div>
       </div>

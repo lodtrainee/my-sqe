@@ -24,7 +24,7 @@ const PAGE_WIDTH = 210;
 const CONTENT_WIDTH = PAGE_WIDTH - MARGINS.left - MARGINS.right;
 
 // EMBEDDED LOGO - Base64 encoded white-transparent.png
-const LOD_LOGO_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+const LOD_LOGO_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAAAyCAYAAAAZUZThAAAACXBIWXMAAAsTAAALEwEAmpwYAAAF0WlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78i iglkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNy4yLWMwMDAgNzkuMWI2NWE3OWI0LCAyMDIyLzA2LzEzLTIyOjAxOjAxICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpypmY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgMjQuMCAoTWFjaW50b3NoKSIgeG1wOkNyZWF0ZURhdGU9IjIwMjUtMDgtMTRUMTg6MTU6NDErMDE6MDAiIHhtcDpNZXRhZGF0YURhdGU9IjIwMjUtMDgtMTRUMTg6MTU6NDErMDE6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDI1LTA4LTE0VDE4OjE1OjQxKzAxOjAwIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjY5ZDM4YmM1LTM4ZTAtNDI0Ny1hMzA0LTNmODM3NzM3NzM3NyIgeG1wTU06RG9jdW1lbnRJRD0iYWRvYmU6ZG9jaWQ6cGhvdG9zaG9wOjY5ZDM4YmM1LTM4ZTAtNDI0Ny1hMzA0LTNmODM3NzM3NzM3NyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOjY5ZDM4YmM1LTM4ZTAtNDI0Ny1hMzA0LTNmODM3NzM3NzM3NyIgZGM6Zm9ybWF0PSJpbWFnZS9wbmciIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiPiA8eG1wTU06SGlzdG9yeT4gPHJkZjpTZXE+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJjcmVhdGVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjY5ZDM4YmM1LTM4ZTAtNDI0Ny1hMzA0LTNmODM3NzM3NzM3NyIgc3RFdnQ6d2hlbj0iMjAyNS0wOC0xNFQxODoxNTo0MSswMTowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIDI0LjAgKE1hY2ludG9zaCkiLz4gPC9yZGY6U2VxPiA8L3htcE1NOkhpc3Rvcnk+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+';
 
 // Helper function to add LOD logo and header with EMBEDDED logo
 async function addLODHeader(doc: jsPDF, title: string, pageNumber?: number) {
@@ -616,19 +616,34 @@ export function generateSignOffEmail(period: QwePeriod): void {
     ? 'lottie.henville-miller@lodlaw.com'
     : period.confirmingSolicitor.email;
   
-  const subject = `QWE Sign-off Request - LOD Assignments`;
+  const subject = `QWE Period Sign-off Request - ${period.companyName}`;
   
-  const body = `Hi Lottie,
+  const body = `Dear ${period.confirmingSolicitor.fullName},
 
-I hope you're well.
+I hope this email finds you well.
 
-I am writing to request sign-off for my QWE period at ${period.companyName} where I worked as a ${period.jobTitle} from ${new Date(period.startDate).toLocaleDateString('en-GB')} to ${new Date(period.endDate).toLocaleDateString('en-GB')}.
+I am writing to request your sign-off for my Qualified Work Experience (QWE) period at ${period.companyName}, where I worked as ${period.jobTitle} from ${new Date(period.startDate).toLocaleDateString()} to ${new Date(period.endDate).toLocaleDateString()}.
 
-You will find my journal entries attached. Please do let me know if you require anything further from me.
+During this period, I have completed ${period.reflections.length} reflections covering various aspects of legal practice, which demonstrate my development across the required competency areas.
 
-Many thanks,
+Please find attached a detailed report of my QWE period, including all reflections and competency mappings.
 
-[Your Name]`;
+I would be grateful if you could review the attached documentation and confirm that:
+1. The work described accurately reflects my role and responsibilities
+2. I have demonstrated the required competencies to a satisfactory standard
+3. You are satisfied with the quality and depth of my reflections
+
+Please let me know if you require any additional information or have any questions.
+
+Thank you for your time and support.
+
+Best regards,
+[Your Name]
+
+---
+SRA Number: ${period.confirmingSolicitor.sraNumber}
+Assignment Type: ${period.assignmentType}
+Period: ${new Date(period.startDate).toLocaleDateString()} - ${new Date(period.endDate).toLocaleDateString()}`;
 
   const mailtoLink = `mailto:${recipientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   window.open(mailtoLink);
