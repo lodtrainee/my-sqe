@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { addReflection, addPeriod, updateReflection, load, deleteReflection, deletePeriod, AppData, placementsCount } from "@/lib/store";
-import { HighLevelArea, LowLevelCompetency, HIGH_TO_LOW, COMPETENCY_DESCRIPTIONS, LOW_LEVEL_DESCRIPTIONS } from "@/lib/types";
+import { addReflection, addPeriod, updateReflection, load, deleteReflection, deletePeriod, updateSignOffStatus, AppData, placementsCount } from "@/lib/store";
+import { HighLevelArea, LowLevelCompetency, HIGH_TO_LOW, COMPETENCY_DESCRIPTIONS, LOW_LEVEL_DESCRIPTIONS, SignOffStatus } from "@/lib/types";
 import { exportQwePeriodToPDF, generateSignOffEmail } from "@/lib/export";
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
@@ -617,7 +617,21 @@ export default function PeriodsPage() {
                   <span className="text-white font-bold text-xl">{p.companyName.charAt(0)}</span>
                 </div>
                 <div>
-                  <div className="font-bold text-2xl text-[color:var(--color-heading)] mb-2">{p.companyName}</div>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="font-bold text-2xl text-[color:var(--color-heading)]">{p.companyName}</div>
+                    <div 
+                      className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusBadge(p.signOffStatus).className} cursor-help relative group`}
+                      title={getStatusBadge(p.signOffStatus).tooltip}
+                    >
+                      {getStatusBadge(p.signOffStatus).text}
+                      
+                      {/* Tooltip */}
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-10 max-w-xs text-center">
+                        {getStatusBadge(p.signOffStatus).tooltip}
+                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                      </div>
+                    </div>
+                  </div>
                   <div className="text-lg text-slate-600">{p.jobTitle}</div>
                 </div>
               </div>
@@ -663,6 +677,31 @@ export default function PeriodsPage() {
                   </div>
                 </div>
 
+                {/* Sign-off Status Section */}
+                <div className="bg-gradient-to-r from-pink-100/60 via-purple-50/40 to-blue-50/60 hover:from-pink-200/80 hover:via-purple-100/60 hover:to-blue-100/80 rounded-xl p-4 mb-6 border border-pink-200/40 shadow-sm transition-all duration-300">
+                  <div className="flex items-center justify-between">
+                    <div className="font-semibold text-base text-[color:var(--color-heading)]">Sign-off Status</div>
+                    <div className="flex items-center gap-3">
+                      <div className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusBadge(p.signOffStatus).className}`}>
+                        {getStatusBadge(p.signOffStatus).text}
+                      </div>
+                      <select 
+                        className="bg-white border border-gray-200 rounded-lg px-3 py-1 text-sm font-medium transition-all duration-300 focus:border-[color:var(--brand-teal)] focus:outline-none focus:ring-1 focus:ring-[color:var(--brand-teal)]/20 shadow-sm hover:border-gray-300"
+                        value={p.signOffStatus}
+                        onChange={(e) => {
+                          updateSignOffStatus(data, p.id, e.target.value as SignOffStatus);
+                          refresh();
+                        }}
+                      >
+                        <option value="not_started">Mark as Not Started</option>
+                        <option value="requested">Mark as Requested</option>
+                        <option value="signed_off">Mark as Signed Off</option>
+                        <option value="rejected">Mark as Rejected</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="flex flex-wrap gap-4 mb-8">
                   <button 
                     className="btn btn-primary clickable text-lg px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300" 
@@ -673,6 +712,8 @@ export default function PeriodsPage() {
                   >
                     + Add Reflection
                   </button>
+                  
+
                   <button 
                     className="btn btn-black clickable text-lg px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                     onClick={() => exportQwePeriodToPDF(p)}
@@ -1137,6 +1178,36 @@ export default function PeriodsPage() {
 function formatDate(iso: string) {
   const d = new Date(iso);
   return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+}
+
+function getStatusBadge(status: SignOffStatus | undefined) {
+  // Default to "not_started" if status is undefined
+  const safeStatus = status || "not_started";
+  
+  const config = {
+    not_started: {
+      text: "Sign-off Not Started",
+      tooltip: "You haven't requested sign-off for this period yet",
+      className: "bg-gray-100 text-gray-600 border-gray-200"
+    },
+    requested: {
+      text: "Sign-off Requested",
+      tooltip: "You've sent the sign-off request, waiting for confirmation",
+      className: "bg-yellow-100 text-yellow-700 border-yellow-200"
+    },
+    signed_off: {
+      text: "✓ Signed Off",
+      tooltip: "This period has been confirmed by the solicitor",
+      className: "bg-green-100 text-green-700 border-green-200"
+    },
+    rejected: {
+      text: "✗ Sign-off Rejected",
+      tooltip: "The sign-off request was declined or needs revision",
+      className: "bg-red-100 text-red-700 border-red-200"
+    }
+  };
+  
+  return config[safeStatus];
 }
 
 

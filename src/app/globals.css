@@ -81,14 +81,11 @@ body {
 .sidebar {
   background: linear-gradient(135deg, var(--brand-teal) 0%, var(--accent-purple) 100%);
   box-shadow: var(--shadow-lg);
-  transition: var(--transition-normal);
 }
 
 .clickable {
   cursor: pointer;
 }
-
-/* Removed animations to prevent glitch */
 
 /* Typography */
 .display-title {
@@ -106,26 +103,31 @@ body {
   box-shadow: var(--shadow-md);
   backdrop-filter: blur(10px);
 }
+
 .btn {
   border-radius: var(--border-radius-md);
   padding: 12px 18px;
   font-weight: 600;
   border: none;
 }
+
 .btn-primary {
   background: linear-gradient(135deg, var(--brand-teal) 0%, var(--accent-purple) 100%);
   color: white;
   box-shadow: var(--shadow-teal);
 }
+
 .btn-primary:hover { 
   opacity: 0.95; 
   box-shadow: var(--shadow-lg);
 }
+
 .btn-black {
   background: linear-gradient(135deg, #1c2640 0%, #2d3748 100%);
   color: white;
   box-shadow: 0 4px 16px rgba(28, 38, 64, 0.2);
 }
+
 .btn-outline {
   background: transparent;
   border: 1px solid var(--card-border);
@@ -141,7 +143,6 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.8);
   position: relative;
   overflow: hidden;
-  transition: var(--transition-normal);
 }
 
 .pill-track::before {
@@ -162,8 +163,6 @@ body {
   border-radius: var(--border-radius-full);
   box-shadow: 0 2px 12px rgba(26, 191, 155, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.3);
   position: relative;
-  animation: gradientShift 4s ease infinite;
-  transition: var(--transition-slow);
 }
 
 .pill-fill::before {
@@ -188,34 +187,14 @@ body {
 
 /* Neighbor dimming in dial grid */
 .dial-grid .dial-chip { 
-  transition: var(--transition-normal); 
-  will-change: opacity, transform; 
-  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  animation-fill-mode: both;
+  position: relative; 
+  z-index: 0; 
 }
-
-/* Stagger animation delays for dials */
-.dial-grid .dial-chip:nth-child(1) { animation-delay: 0.1s; }
-.dial-grid .dial-chip:nth-child(2) { animation-delay: 0.15s; }
-.dial-grid .dial-chip:nth-child(3) { animation-delay: 0.2s; }
-.dial-grid .dial-chip:nth-child(4) { animation-delay: 0.25s; }
-.dial-grid .dial-chip:nth-child(5) { animation-delay: 0.3s; }
-.dial-grid .dial-chip:nth-child(6) { animation-delay: 0.35s; }
-.dial-grid .dial-chip:nth-child(7) { animation-delay: 0.4s; }
-.dial-grid .dial-chip:nth-child(8) { animation-delay: 0.45s; }
-.dial-grid .dial-chip:nth-child(9) { animation-delay: 0.5s; }
-.dial-grid .dial-chip:nth-child(10) { animation-delay: 0.55s; }
-.dial-grid .dial-chip:nth-child(11) { animation-delay: 0.6s; }
-.dial-grid .dial-chip:nth-child(12) { animation-delay: 0.65s; }
-.dial-grid .dial-chip:nth-child(13) { animation-delay: 0.7s; }
-.dial-grid .dial-chip:nth-child(14) { animation-delay: 0.75s; }
-.dial-grid .dial-chip:nth-child(15) { animation-delay: 0.8s; }
 
 /* Dim only when an actual chip is hovered or focused */
 .dial-grid:has(.dial-chip:is(:hover, :focus-within)) .dial-chip { opacity: 0.65; }
 .dial-grid:has(.dial-chip:is(:hover, :focus-within)) .dial-chip:is(:hover, :focus-within) { opacity: 1; }
 /* Ensure hovered dial sits above neighbors */
-.dial-grid .dial-chip { position: relative; z-index: 0; }
 .dial-grid .dial-chip:hover, .dial-grid .dial-chip:focus-within { z-index: 30; opacity: 1 !important; }
 
 /* Modern tech effects */
@@ -230,8 +209,6 @@ body {
   background-clip: text;
 }
 
-
-
 /* Holographic effect for charts */
 .holographic {
   background: linear-gradient(135deg, 
@@ -240,43 +217,6 @@ body {
     rgba(236, 72, 153, 0.05) 100%);
   border: 1px solid rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(10px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-dial-breathe, .animate-dial-ripple { animation: none; }
-}
-
-/* Custom animations for dials */
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.1); }
-}
-
-@keyframes pulse-3 {
-  0%, 100% { transform: scale(1); }
-  20% { transform: scale(1.05); }
-  40% { transform: scale(1.02); }
-  60% { transform: scale(1.05); }
-  80% { transform: scale(1.02); }
-}
-
-.animate-pulse-3 {
-  animation: pulse-3 1.5s ease-in-out;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-}
-
-.floating {
-  animation: float 3s ease-in-out infinite;
 }
 
 /* Reflection text overflow handling */

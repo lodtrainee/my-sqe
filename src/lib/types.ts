@@ -1,5 +1,7 @@
 export type AssignmentType = "LOD" | "Standard";
 
+export type SignOffStatus = "not_started" | "requested" | "signed_off" | "rejected";
+
 export interface SolicitorDetails {
   fullName: string;
   sraNumber: string; // 6 digits
@@ -16,6 +18,10 @@ export interface QwePeriod {
   assignmentType: AssignmentType;
   confirmingSolicitor: SolicitorDetails;
   reflections: Reflection[];
+  signOffStatus: SignOffStatus;
+  signOffRequestedDate?: string; // ISO date
+  signOffCompletedDate?: string; // ISO date
+  signOffNotes?: string;
 }
 
 export interface Reflection {

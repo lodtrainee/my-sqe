@@ -7,6 +7,7 @@ import {
   AssignmentType,
   LOD_DEFAULTS,
   ALL_LOW,
+  SignOffStatus,
 } from "@/lib/types";
 
 export type AppData = {
@@ -34,6 +35,7 @@ function getDefaultData(): AppData {
           email: "jane@example.com",
         },
         reflections: [],
+        signOffStatus: "not_started" as SignOffStatus,
       },
       {
         id: uuidv4(),
@@ -45,6 +47,7 @@ function getDefaultData(): AppData {
         assignmentType: "LOD",
         confirmingSolicitor: LOD_DEFAULTS.solicitor,
         reflections: [],
+        signOffStatus: "not_started" as SignOffStatus,
       },
       {
         id: uuidv4(),
@@ -56,6 +59,7 @@ function getDefaultData(): AppData {
         assignmentType: "LOD",
         confirmingSolicitor: LOD_DEFAULTS.solicitor,
         reflections: [],
+        signOffStatus: "not_started" as SignOffStatus,
       },
     ],
   };
@@ -108,7 +112,19 @@ export function load(): AppData {
     const parsed = JSON.parse(raw) as AppData;
     // Basic shape guard
     if (!parsed || !Array.isArray(parsed.periods)) return getDefaultData();
-    return parsed;
+    
+    // Add missing signOffStatus fields to existing periods
+    const updatedPeriods = parsed.periods.map(period => ({
+      ...period,
+      signOffStatus: period.signOffStatus || "not_started",
+      signOffRequestedDate: period.signOffRequestedDate,
+      signOffCompletedDate: period.signOffCompletedDate,
+      signOffNotes: period.signOffNotes,
+    }));
+    
+    const updatedData = { ...parsed, periods: updatedPeriods };
+    save(updatedData); // Save the updated data back to localStorage
+    return updatedData;
   } catch {
     return getDefaultData();
   }
@@ -136,6 +152,7 @@ export function addPeriod(current: AppData, input: NewPeriodInput): AppData {
     assignmentType: input.assignmentType,
     confirmingSolicitor: input.confirmingSolicitor,
     reflections: [],
+    signOffStatus: "not_started",
   };
   data.periods.unshift(period);
   save(data);
@@ -189,6 +206,34 @@ export function deletePeriod(current: AppData, periodId: string): AppData {
   return data;
 }
 
+export function updateSignOffStatus(
+  current: AppData, 
+  periodId: string, 
+  status: SignOffStatus, 
+  notes?: string
+): AppData {
+  const data: AppData = { ...current, periods: [...current.periods] };
+  const index = data.periods.findIndex((p) => p.id === periodId);
+  if (index === -1) return current;
+  
+  const period = { ...data.periods[index] };
+  period.signOffStatus = status;
+  
+  if (status === "requested") {
+    period.signOffRequestedDate = new Date().toISOString();
+  } else if (status === "signed_off") {
+    period.signOffCompletedDate = new Date().toISOString();
+  }
+  
+  if (notes !== undefined) {
+    period.signOffNotes = notes;
+  }
+  
+  data.periods[index] = period;
+  save(data);
+  return data;
+}
+
 export function computeTotalMonths(periods: QwePeriod[]): number {
   if (periods.length === 0) return 0;
   
@@ -230,6 +275,24 @@ export function placementsCount(periods: QwePeriod[]): number {
   
   // All LOD periods count as 1 placement, each non-LOD period counts as 1 placement
   return (lodPeriods > 0 ? 1 : 0) + nonLodPeriods;
+}
+
+export function getSignOffStats(periods: QwePeriod[]): {
+  total: number;
+  notStarted: number;
+  requested: number;
+  signedOff: number;
+  rejected: number;
+} {
+  const stats = {
+    total: periods.length,
+    notStarted: periods.filter(p => p.signOffStatus === "not_started").length,
+    requested: periods.filter(p => p.signOffStatus === "requested").length,
+    signedOff: periods.filter(p => p.signOffStatus === "signed_off").length,
+    rejected: periods.filter(p => p.signOffStatus === "rejected").length,
+  };
+  
+  return stats;
 }
 
 // Convenience for users adding LOD periods manually

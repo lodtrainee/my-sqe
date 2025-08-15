@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { useEffect, useMemo, useState } from "react";
-import { load, computeTotalMonths, competencyCounts, placementsCount } from "@/lib/store";
+import { load, computeTotalMonths, competencyCounts, placementsCount, getSignOffStats } from "@/lib/store";
 import { ALL_LOW, LowLevelCompetency } from "@/lib/types";
 import { Dial } from "@/components/Dial";
 import { Gauge } from "@/components/Gauge";
@@ -36,6 +36,7 @@ export default function Home() {
     return competencyCounts(periods);
   }, [mounted, periods]);
   const placements = useMemo(() => (mounted ? placementsCount(periods) : 0), [mounted, periods]);
+  const signOffStats = useMemo(() => (mounted ? getSignOffStats(periods) : { total: 0, notStarted: 0, requested: 0, signedOff: 0, rejected: 0 }), [mounted, periods]);
   const progress = Math.min(1, months / 24);
   
   const consistencyStats = useMemo(() => {
@@ -127,7 +128,9 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="col-span-1 fade-in-up" style={{ animationDelay: '0.4s' }}>
+
+
+          <div className="col-span-1 fade-in-up" style={{ animationDelay: '0.5s' }}>
             <SectionTitle>Total Organisations</SectionTitle>
             <div className="text-[clamp(20px,4vw,32px)] font-extrabold text-[color:var(--color-heading)] mb-6 tracking-tight flex items-center gap-3">
               {placements} out of 4 organisations
@@ -261,6 +264,8 @@ export default function Home() {
                 </div>
               ))}
             </div>
+
+
             
 
           </div>
